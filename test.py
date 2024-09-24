@@ -1,12 +1,35 @@
-from firebase import Firebase
-config = {
-  "apiKey": "AIzaSyCCmxwm-fxfa5Jkn1j3FeoQ1lGNWC4w72c",
-  "authDomain": "journal-web-app-6530d.firebaseapp.com",
-  "projectId": "journal-web-app-6530d",
-  "storageBucket": "journal-web-app-6530d.appspot.com",
-  "messagingSenderId": "631248843510",
-  "appId": "1:631248843510:web:c1e0ea193edac4cb5772d7",
-  "measurementId": "G-X212FXZPNC",
-  "databaseURL": "https://journal-web-app-6530d-default-rtdb.firebaseio.com/"
-}
-firebase = Firebase(config)
+import pyrebase
+
+firebaseConfig = {
+  "apiKey": "AIzaSyBhdyPrsSHO9jVIngsXZ3sRPgKqaqqXPJQ",
+  "authDomain": "journal-3c895.firebaseapp.com",
+  "projectId": "journal-3c895",
+  "storageBucket": "journal-3c895.appspot.com",
+  "messagingSenderId": "1095141627347",
+  "appId": "1:1095141627347:web:d490b3b836137703734b26"
+};
+
+firebase = pyrebase.initialize_app(firebaseConfig)
+
+""" Auth  """
+auth = firebase.auth()
+
+def signup():
+  email = input("Email: ")
+  password = input("Password: ")
+  try:
+    user = auth.create_user_with_email_and_password(email, password)
+    print(user)
+  except:
+    print("Error")
+
+def login():
+  email = input("Email: ")
+  password = input("Password: ")
+  try:
+    user = auth.sign_in_with_email_and_password(email, password)
+    print(user)
+  except:
+    print("Error")
+
+signup()
