@@ -1,0 +1,38 @@
+name: Deploy Flask App to GitHub Pages
+
+# Trigger this workflow on push to the main branch
+on:
+  push:
+    branches:
+      - master  # Adjust to match your default branch, e.g., main or master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'  # Adjust to match your Python version
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Freeze the Flask app
+        run: |
+          python freeze.py  # This will generate the static files
+
+      - name: Adjust base href
+        run: sed -i 's|<base href="/">|<base href="/journal_web/">|' build/index.html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build  # Frozen-Flask will output the static files here
