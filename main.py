@@ -6,57 +6,54 @@ app = Flask(__name__)
 def Home():
     return render_template('index.html')
 @app.route("/current_issue.html")
-def current_issue():
+def currissue():
     return render_template('screens/browse/current_issue.html')
 @app.route("/by_issue.html")
-def by_issue():
+def byissue():
     return render_template('screens/browse/by_issue.html')
 
-@app.route("/archive.html")
-def archive():
-    return render_template('archive.html')
 @app.route("/archive_2024.html")
-def archive_2024():
+def archive():
     return render_template('screens/archivee/archive_2024.html')
 
 @app.route("/about_jrnl.html")
-def about_jrnl():
+def about_journal():
     return render_template('screens/journal_info/about_jrnl.html')
 @app.route("/aimandscope.html")
-def aimandscope():
+def aimnscope():
     return render_template('screens/journal_info/aimandscope.html')
 @app.route("/editorial_board.html")
-def editorial_board():
+def editboard():
     return render_template('screens/journal_info/editorial_board.html')
 @app.route("/publication_ethics.html")
-def publication_ethics():
+def pubethics():
     return render_template('screens/journal_info/publication_ethics.html')
 @app.route("/peerrevpro.html")
-def peerrevpro():
+def peerpro():
     return render_template('screens/journal_info/peerrevpro.html')
 @app.route("/indandabs.html")
-def indandabs():
+def indnabs():
     return render_template('screens/journal_info/indandabs.html')
 @app.route("/subonpaper.html")
-def subonpaper():
+def subon():
     return render_template('screens/for_author/subonpaper.html')
 @app.route("/topics.html")
-def topics():
+def topic():
     return render_template('screens/for_author/topics.html')
 @app.route("/author_gl.html")
-def author_gl():
+def authgl():
     return render_template('screens/for_author/author_gl.html')
 @app.route("/copyrightform.html")
-def copyrightform():
+def crform():
     return render_template('screens/for_author/copyrightform.html')
 @app.route("/checkpaperstats.html")
-def checkpaperstats():
+def checkpapstat():
     return render_template('screens/for_author/checkpaperstats.html')
 @app.route("/membership.html")
-def membership():
+def mship():
     return render_template('screens/for_author/membership.html')
 @app.route("/submanuscript.html")
-def submanuscript():
+def submitmanscr():
     return render_template('pages/submanuscript.html')
 @app.route("/reviewer.html")
 def reviewer():
@@ -69,7 +66,7 @@ def regasbm():
     return render_template('screens/join_us/regasbm.html')
 
 @app.route("/contact.html")
-def Contact():
+def ContactUs():
     return render_template('contact.html')
 
 freezer = Freezer(app)
