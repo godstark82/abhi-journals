@@ -58,13 +58,6 @@ def submitmanscr():
 @app.route("/reviewer.html")
 def reviewer():
     return render_template('pages/reviewer.html')
-@app.route("/regasrev.html")
-def regasrev():
-    return render_template('screens/join_us/regasrev.html')
-@app.route("/regasbm.html")
-def regasbm():
-    return render_template('screens/join_us/regasbm.html')
-
 @app.route("/contact.html")
 def ContactUs():
     return render_template('contact.html')

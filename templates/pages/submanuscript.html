@@ -1,6 +1,72 @@
 {% extends "layout.html" %}
 {% block body %}
-<title>Submit Manuscript</title>
 
+<head></head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #edeff4;
+        }
 
-{% endblock %} 
+        .main-content {
+            margin: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 10px;
+            background-color: #004080;
+            color: white;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+            color: white;
+        }
+
+        section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        h5 {
+            color: black;
+        }
+
+        .custom-link {
+            color: black; /* Default link color */
+            text-decoration: none; /* Remove underline */
+        }
+        
+        .custom-link:hover {
+            color: #033e93;
+            text-decoration: none; /* Color on hover */
+        }
+        
+
+    </style>
+    <title>Submit Manuscript</title>
+</head>
+
+<body>
+    <div class="main-content">
+        <header>
+            <h1>Submit Manuscript</h1>
+        </header>
+
+        <section>
+            <h5>Kindly submit manuscript by using the link:-</h5>
+            <p>
+               <a href="https://godstark82.github.io/journal_admin/#/login" class="custom-link" >https://godstark82.github.io/journal_admin/#/login</a>
+            </p>
+        </section>
+
+    </div>
+</body>
+
+{% endblock %}

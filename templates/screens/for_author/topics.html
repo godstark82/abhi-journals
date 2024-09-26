@@ -1,6 +1,60 @@
 {% extends "layout.html" %}
 {% block body %}
-<title>Topics</title>
 
+<head>
+    <title>Topics</title>
+    <style>
+        .main-content {
+            margin: 20px;
+        }
 
-{% endblock %} 
+        p,
+        h4 {
+            color: black;
+        }
+
+        section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-content">
+        <section>
+            <p>
+                We welcome <b>research papers, review articles, and theoretical or empirical studies</b> in the
+                following areas, but not limited to:
+            </p>
+            <h4>Economics:</h4>
+            <p>
+                Microeconomics and Macroeconomics <br>
+                Economic Policy and Analysis <br>
+                International Economics <br>
+                Behavioural Economics <br>
+                Development Economics <br>
+                Environmental Economics
+            </p>
+        </section>
+        <section>
+            <h4>Management Science:</h4>
+            <p>
+                Hospital Management <br> 
+                Hotel Management <br>
+                Organizational Behaviour <br>
+                Strategic Management <br>
+                Blockchain management <br>
+                Marketing and Consumer Behaviour <br>
+                Human Resources and Talent Management <br>
+                Operations and Supply Chain Management <br>
+                Technology and Innovation Management <br>
+            </p>
+        </section>
+    </div>
+</body>
+
+{% endblock %}
