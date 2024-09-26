@@ -9675,3 +9675,33 @@ h6,
   padding: 0;
   list-style-type: none;
 }
+
+/* Remove the active state style for dropdown links */
+.nav-item.dropdown .nav-link {
+  color: #fff; /* Default text remains white */
+  background-color: transparent; /* Prevent background color change on click */
+}
+
+/* Change background color and text color on hover */
+.nav-item.dropdown .nav-link:hover {
+  background-color: #ffcc00; /* Darker background on hover */
+  color: #000; /* Change text color to black on hover */
+}
+
+/* Ensure dropdown items are styled correctly */
+.nav-item .dropdown-menu .dropdown-item {
+  color: #000; /* Default text color for dropdown items */
+  background-color: transparent; /* Default background */
+}
+
+/* Change background and text color on dropdown item hover */
+.nav-item .dropdown-menu .dropdown-item:hover {
+  background-color: #343a40; /* Darker background for dropdown items on hover */
+  color: #fff; /* White text on hover */
+}
+
+/* Prevent active class from changing color when clicked */
+.nav-item .dropdown-item.active {
+  background-color: transparent; /* Reset background */
+  color: #000; /* Reset text color */
+}
