@@ -1,5 +1,4 @@
 Flask==2.2.0
 Frozen-Flask==0.18
 Werkzeug==2.2.2
-Pyrebase==3.0.27
 firebase-admin==6.5.0
