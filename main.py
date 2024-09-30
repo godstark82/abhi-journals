@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from flask_frozen import Freezer
 import firebase_admin
+import os
 from firebase_admin import credentials, firestore
 
 app = Flask(__name__)
