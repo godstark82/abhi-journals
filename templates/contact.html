@@ -1,5 +1,30 @@
 {% extends "layout.html" %}
 {% block body %}
+<style>
+    .flash-message-container {
+        width: 100%;
+        text-align: center;
+        margin-bottom: 10px;
+    }
+    
+    .alert {
+        display: inline-block;
+        margin: 10px auto;
+        padding: 15px;
+        color: #fff;
+        background-color: #28a745; /* success message color */
+        border-radius: 5px;
+    }
+    
+    .alert.alert-success {
+        background-color: #28a745;
+    }
+    
+    .alert.alert-error {
+        background-color: #dc3545;
+    }
+    
+</style>
 <title>Contact Us</title>
 
     <!-- Contact Start -->
@@ -7,6 +32,19 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-8">
+
+                     <!-- Flash Message Section (above the heading) -->
+                <div class="flash-message-container">
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                    {% endif %}
+                    {% endwith %}
+                </div>
+
+                <!-- Section Title -->
                     <div class="section-title mb-0">
                         <h4 class="m-0 text-uppercase font-weight-bold">Contact Us For Any Queries</h4>
                     </div>
@@ -37,24 +75,24 @@
                             </div>
                         </div>
                         <h6 class="text-uppercase font-weight-bold mb-3">Contact Us</h6>
-                        <form>
+                        <form action="/contact.html" method="post">
                             <div class="form-row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" class="form-control p-4" placeholder="Your Name" required="required"/>
+                                        <input type="text" class="form-control p-4" placeholder="Your Name" required="required" name="name"/>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="email" class="form-control p-4" placeholder="Your Email" required="required"/>
+                                        <input type="email" class="form-control p-4" placeholder="Your Email" required="required" name="email"/>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control p-4" placeholder="Subject" required="required"/>
+                                <input type="text" class="form-control p-4" placeholder="Subject" required="required" name="subject"/>
                             </div>
                             <div class="form-group">
-                                <textarea class="form-control" rows="4" placeholder="Message" required="required"></textarea>
+                                <textarea class="form-control" rows="4" placeholder="Message" required="required" name="message"></textarea>
                             </div>
                             <div>
                                 <button class="btn btn-primary font-weight-semi-bold px-4" style="height: 50px;"
@@ -120,4 +158,13 @@
         </div>
     </div>
     <!-- Contact End -->
+     <script>
+        setTimeout(function() {
+            let flashMessage = document.querySelector('.flash-message-container');
+            if (flashMessage) {
+                flashMessage.style.display = 'none';
+            }
+        }, 5000);  // 5 seconds delay
+        
+     </script>
     {% endblock %} 

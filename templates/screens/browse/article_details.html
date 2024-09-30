@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<style>
+    .article-container {
+        margin: 40px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        color: black;
+        position: relative;
+    }
+    .article-title {
+        color: black;
+        margin-bottom: 20px;
+    }
+    .article-meta {
+        margin-bottom: 15px;
+        margin-right: 320px; /* Increased to accommodate larger image */
+    }
+    .article-image {
+        max-width: 300px; /* Increased from 200px */
+        height: auto;
+        border-radius: 8px;
+        position: absolute;
+        top: 60px; /* Adjusted to make room for the PDF button */
+        right: 20px;
+    }
+    .article-section {
+        margin-bottom: 30px;
+    }
+    .pdf-button {
+        background-color: #f0f0f0;
+        color: black;
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        display: inline-block;
+        transition: color 0.3s ease;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+    .pdf-button:hover {
+        color: #033e93;
+    }
+    .pdf-icon {
+        margin-right: 5px;
+    }
+</style>
+
+{% for article in articles %}
+<div class="article-container">
+    {% if article.pdf %}
+    <a href="{{ article.pdf }}" class="pdf-button">
+        <i class="fas fa-file-pdf pdf-icon"></i>
+        Download PDF Of Article
+    </a>
+    {% endif %}
+
+    {% if article.image %}
+    <img src="{{ article.image }}" alt="{{ article.title }}" class="article-image">
+    {% endif %}
+
+    <h5 class="article-title">{{ article.title }}</h5>
+    
+    <div class="article-meta">
+        <p><strong>Document Type:</strong> {{ article.documentType }}</p>
+        <p><strong>Authors:</strong> {{ article.authors|join(', ') }}</p>
+        <p><strong>Abstract:</strong></p>
+        <p>{{ article.abstractString }}</p>
+    </div>
+
+    {% if article.keywords %}
+    <div class="article-section">
+        <p><strong>Keywords:</strong> {{ article.keywords|join(',') }}</p> 
+    </div>
+    {% endif %}
+
+    {% if article.mainSubjects %}
+    <div class="article-section">
+        <p><strong>Main Subjects:</strong> {{ article.mainSubjects|join(',') }}</p> 
+    </div>
+    {% endif %}
+
+    
+    {% if article.references %}
+    <div class="article-section">
+        <p class="references-title">
+            <strong>References</strong>
+            <button class="toggle-references" data-state="closed"><i class="fas fa-chevron-down"></i></button>
+        </p>
+        <ol class="references-list" style="display: none;">
+            {% for reference in article.references %}
+            <li>{{ reference }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+    <script>
+        document.querySelector('.toggle-references').addEventListener('click', function() {
+            var button = this;
+            var icon = button.querySelector('i');
+            var list = document.querySelector('.references-list');
+            if (button.dataset.state === 'closed') {
+                list.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                button.dataset.state = 'open';
+            } else {
+                list.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                button.dataset.state = 'closed';
+            }
+        });
+    </script>
+    {% endif %}
+</div>
+{% endfor %}
+
+
+{% endblock %}

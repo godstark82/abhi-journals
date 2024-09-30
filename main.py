@@ -1,13 +1,62 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from flask_frozen import Freezer
+import firebase_admin
+from firebase_admin import credentials, firestore
+
 app = Flask(__name__)
+app.secret_key = 'journalwebx8949328001'
+
+cred = credentials.Certificate(r"C:\Users\Pankaj\Downloads\journal-3c895-firebase-adminsdk-tjfrv-4dd20d68c2.json")
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
 
 @app.route("/")
 def Home():
     return render_template('index.html')
 @app.route("/current_issue.html")
 def currissue():
-    return render_template('screens/browse/current_issue.html')
+    # Fetch articles from Firestore
+    articles_ref = db.collection('articles')
+    articles = articles_ref.stream()
+    
+    # Extract titles from articles
+    article_data = [
+        {
+            'title': article.to_dict().get('title', 'No Title'),
+            'authors': article.to_dict().get('authors', 'Unknown Author'),
+            'createdAt': article.to_dict().get('createdAt', 'Unknown Date'),
+            'image': article.to_dict().get('image', None),
+            'pdf': article.to_dict().get('pdf', None)
+        } for article in articles
+    ]
+
+    return render_template('screens/browse/current_issue.html', articles=article_data)
+
+@app.route("/article_details.html")
+def article_details():
+    # Fetch articles from Firestore
+    articles_ref = db.collection('articles')
+    articles = articles_ref.stream()
+    
+    # Extract detailed information from articles
+    article_data = [
+        {
+            'title': article.to_dict().get('title', 'No Title'),
+            'documentType': article.to_dict().get('documentType', 'Unknown Type'),
+            'authors': article.to_dict().get('authors', []),
+            'pdf': article.to_dict().get('pdf', None),
+            'abstractString': article.to_dict().get('abstractString', 'No abstract available'),
+            'keywords': article.to_dict().get('keywords', []),
+            'mainSubjects': article.to_dict().get('mainSubjects', []),
+            'references': article.to_dict().get('references', []),
+            'image': article.to_dict().get('image', None),
+        } for article in articles
+    ]
+
+    return render_template('screens/browse/article_details.html', articles=article_data)
+
 @app.route("/by_issue.html")
 def byissue():
     return render_template('screens/browse/by_issue.html')
@@ -58,8 +107,24 @@ def submitmanscr():
 @app.route("/reviewer.html")
 def reviewer():
     return render_template('pages/reviewer.html')
-@app.route("/contact.html")
+@app.route("/contact.html", methods=['GET', 'POST'])
 def ContactUs():
+    if request.method == 'POST':
+        name = request.form.get("name")
+        email = request.form.get("email")
+        subject = request.form.get("subject")
+        message = request.form.get("message")
+
+        data = {
+            "name": name,
+            "email": email,
+            "subject": subject,
+            "message": message
+      }
+
+        db.collection("contact").add(data)
+        flash('Your message has been successfully submitted!', 'success')
+        return redirect(url_for('ContactUs'))
     return render_template('contact.html')
 
 freezer = Freezer(app)

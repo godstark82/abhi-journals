@@ -1,6 +1,93 @@
 {% extends "layout.html" %}
 {% block body %}
+<style>
+    section {
+        margin-left: 40px;
+        margin-right: 40px;
+        padding: 20px;
+        color: black;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    h5 a {
+        color: black;
+        text-decoration: none;
+        transition: color 0.3s ease;
+        margin-bottom: 10px;
+    }
+    h5 a:hover {
+        color: #033e93;
+    }
+    .total-articles {
+        margin-left: 40px;
+        color: black;
+        font-weight: bold;
+    }
+    .article-image {
+        max-width: 200px;
+        margin-right: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .article-content {
+        flex-grow: 1;
+    }
+    .article-authors {
+        margin-bottom: 10px;
+    }
+    .article-divider {
+        margin: 15px 0;
+    }
+    .article-meta {
+        margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .pdf-button {
+        background-color: #f0f0f0;
+        color: #333;
+    }
+    .pdf-icon {
+        margin-right: 5px;
+    }
+    .pdf-text-normal {
+        font-weight: normal;
+    }
+    .pdf-text-bold {
+        font-weight: bold;
+        color: black;
+    }
+</style>
 <title>Current Issue</title>
 
+<p class="total-articles">Total Articles: {{ articles|length if articles else 0 }}</p>
 
-{% endblock %} 
+{% for article in articles %}
+<section>
+    <div style="display: flex; align-items: start;">
+        {% if article.image %}
+        <img src="{{ article.image }}" alt="{{ article.title }}" class="article-image">
+        {% endif %}
+        <div class="article-content">
+            <h5><a href="/article_details.html">{{ article.title }}</a></h5>
+            <p class="article-authors">{{ article.authors|join(', ') }}</p>
+            <hr class="article-divider">
+            <div class="article-meta">
+                <span><i class="far fa-clock"></i> {{ article.createdAt }}</span>
+                <a href="{{ article.pdf }}" class="btn btn-sm pdf-button">
+                    <i class="fas fa-file-pdf pdf-icon"></i>
+                    <span class="pdf-text-normal">Download as</span>
+                    <span class="pdf-text-bold">PDF</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section>
+    <p>No articles found.</p>
+</section>
+{% endfor %}
+
+{% endblock %}
