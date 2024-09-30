@@ -12,7 +12,6 @@ firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
-
 @app.route("/")
 def Home():
     return render_template('index.html')
