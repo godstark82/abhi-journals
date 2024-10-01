@@ -147,7 +147,7 @@ freezer = Freezer(app)
 
 if __name__ == "__main__":
     # Comment this out when freezing
-    # app.run(debug=True)
+    app.run(debug=True)
 
     # Uncomment this to generate the static files
     freezer.freeze()
