@@ -12,11 +12,6 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
 
-# cred = credentials.Certificate(r"C:\Users\Pankaj\Downloads\journal-3c895-firebase-adminsdk-tjfrv-785a2bb88c.json")
-# firebase_admin.initialize_app(cred)
-
-# db = firestore.client()
-
 # Fetch Firebase credentials from environment variable
 firebase_credentials = os.getenv('FIREBASE_CREDENTIALS')
 

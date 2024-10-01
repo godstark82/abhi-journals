@@ -27,6 +27,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Set Firebase credentials
+        run: echo "${{ secrets.FIREBASE_CREDENTIALS }}" > firebase_credentials.json
+        shell: bash
+
+
       - name: Freeze the Flask app
         run: |
           python freeze.py  # This will generate the static files
