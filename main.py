@@ -1,16 +1,32 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from flask_frozen import Freezer
-import firebase_admin
 import os
+import json
+import firebase_admin
 from firebase_admin import credentials, firestore
 
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
 
-cred = credentials.Certificate("credentials.json")
-firebase_admin.initialize_app(cred)
+# cred = credentials.Certificate(r"C:\Users\Pankaj\Downloads\journal-3c895-firebase-adminsdk-tjfrv-785a2bb88c.json")
+# firebase_admin.initialize_app(cred)
 
-db = firestore.client()
+# db = firestore.client()
+
+# Fetch Firebase credentials from environment variable
+firebase_credentials = os.getenv('FIREBASE_CREDENTIALS')
+
+if firebase_credentials:
+    # Convert the environment variable JSON string back to a dictionary
+    cred_dict = json.loads(firebase_credentials)
+
+    # Initialize Firebase using the credentials from the environment
+    cred = credentials.Certificate(cred_dict)
+    firebase_admin.initialize_app(cred)
+
+    db = firestore.client()
+else:
+    raise Exception("Firebase credentials are not set in environment variables.")
 
 @app.route("/")
 def Home():
@@ -128,5 +144,11 @@ def ContactUs():
     return render_template('contact.html')
 
 freezer = Freezer(app)
+
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Comment this out when freezing
+    # app.run(debug=True)
+
+    # Uncomment this to generate the static files
+    freezer.freeze()
+
