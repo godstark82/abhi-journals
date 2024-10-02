@@ -33,9 +33,10 @@ jobs:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
         run: echo "FIREBASE_CREDENTIALS='$FIREBASE_CREDENTIALS'" >> $GITHUB_ENV
 
-      - name: Freeze the Flask app
-        run: |
-          python freeze.py  # This will generate the static files
+      - name: Run freeze script
+        env:
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+        run: python freeze.py
 
       - name: Adjust base href
         run: sed -i 's|<base href="/">|<base href="/journal_web/">|' build/index.html

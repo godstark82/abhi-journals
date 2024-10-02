@@ -5,6 +5,7 @@ import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
+import sys
 
 # Load environment variables from .env file
 load_dotenv()
@@ -13,19 +14,23 @@ app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
 
 # Fetch Firebase credentials from environment variable
-firebase_credentials = os.getenv('FIREBASE_CREDENTIALS')
+firebase_credentials = os.environ.get('FIREBASE_CREDENTIALS')
 
-if firebase_credentials:
-    # Convert the environment variable JSON string back to a dictionary
-    cred_dict = json.loads(firebase_credentials)
-
-    # Initialize Firebase using the credentials from the environment
-    cred = credentials.Certificate(cred_dict)
-    firebase_admin.initialize_app(cred)
-
-    db = firestore.client()
-else:
+if not firebase_credentials:
     raise Exception("Firebase credentials are not set in environment variables.")
+
+try:
+    cred_dict = json.loads(firebase_credentials)
+except json.JSONDecodeError as e:
+    print(f"Error decoding JSON: {e}")
+    print(f"Received value: {firebase_credentials}")
+    raise
+
+# Initialize Firebase using the credentials from the environment
+cred = credentials.Certificate(cred_dict)
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 @app.route("/")
 def Home():
