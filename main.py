@@ -16,11 +16,6 @@ app.secret_key = 'journalwebx8949328001'
 # Fetch Firebase credentials from environment variable
 firebase_credentials = os.environ.get('FIREBASE_CREDENTIALS')
 
-print("Python version:", sys.version)
-print("Environment variables:", {k: v for k, v in os.environ.items() if not k.startswith('FIREBASE_')})
-print("FIREBASE_CREDENTIALS length:", len(firebase_credentials) if firebase_credentials else 'Not set')
-print("FIREBASE_CREDENTIALS type:", type(firebase_credentials))
-print("FIREBASE_CREDENTIALS first 10 chars:", firebase_credentials[:10] if firebase_credentials else 'Not set')
 
 if not firebase_credentials:
     raise Exception("Firebase credentials are not set in environment variables.")
