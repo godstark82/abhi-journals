@@ -127,13 +127,17 @@ def ContactUs():
     if request.method == 'POST':
         name = request.form.get("name")
         email = request.form.get("email")
+        phone = request.form.get("phone")
         subject = request.form.get("subject")
+        questiontype = request.form.get("questiontype")
         message = request.form.get("message")
 
         data = {
             "name": name,
             "email": email,
+            "phone": phone,
             "subject": subject,
+            "questiontype": questiontype,
             "message": message
       }
 
