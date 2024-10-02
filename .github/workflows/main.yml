@@ -30,10 +30,8 @@ jobs:
           
 
       - name: Set Firebase credentials
-        env:
-          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
         run: |
-          echo "$FIREBASE_CREDENTIALS" > firebase_credentials.json
+          echo ${{ secrets.FIREBASE_CREDENTIALS }} > firebase_credentials.json
         shell: bash
 
       - name: Set environment variable for Firebase
