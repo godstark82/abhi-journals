@@ -67,7 +67,7 @@
         <p><strong>Document Type:</strong> {{ article.documentType }}</p>
         <p><strong>Authors:</strong> {{ article.authors|join(', ') }}</p>
         <p><strong>Abstract:</strong></p>
-        <p>{{ article.abstractString }}</p>
+        <p style="text-align: justify;">{{ article.abstractString }}</p>
     </div>
 
     {% if article.keywords %}

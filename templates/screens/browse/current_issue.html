@@ -2,8 +2,7 @@
 {% block body %}
 <style>
     section {
-        margin-left: 40px;
-        margin-right: 40px;
+        margin: 20px;
         padding: 20px;
         color: black;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -14,20 +13,22 @@
         text-decoration: none;
         transition: color 0.3s ease;
         margin-bottom: 10px;
+        display: block;
     }
     h5 a:hover {
         color: #033e93;
     }
     .total-articles {
-        margin-left: 40px;
+        margin: 20px;
         color: black;
         font-weight: bold;
     }
     .article-image {
-        max-width: 200px;
-        margin-right: 20px;
+        max-width: 100%;
+        height: auto;
         border-radius: 8px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 15px;
     }
     .article-content {
         flex-grow: 1;
@@ -41,12 +42,14 @@
     .article-meta {
         margin-top: 15px;
         display: flex;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
     }
     .pdf-button {
         background-color: #f0f0f0;
         color: #333;
+        margin-top: 10px;
     }
     .pdf-icon {
         margin-right: 5px;
@@ -58,14 +61,26 @@
         font-weight: bold;
         color: black;
     }
+
+    @media (min-width: 768px) {
+        .article-container {
+            display: flex;
+            align-items: start;
+        }
+        .article-image {
+            max-width: 200px;
+            margin-right: 20px;
+            margin-bottom: 0;
+        }
+    }
 </style>
 <title>Current Issue</title>
 
-<p class="total-articles">Total Articles: {{ articles|length if articles else 0 }}</p>
+<p class="total-articles">Total Results : {{ articles|length if articles else 0 }}</p>
 
 {% for article in articles %}
 <section>
-    <div style="display: flex; align-items: start;">
+    <div class="article-container">
         {% if article.image %}
         <img src="{{ article.image }}" alt="{{ article.title }}" class="article-image">
         {% endif %}

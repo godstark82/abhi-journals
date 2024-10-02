@@ -148,11 +148,28 @@ def ContactUs():
             "questiontype": questiontype,
             "message": message
       }
-
+        
         db.collection("contact").add(data)
         flash('Your message has been successfully submitted!', 'success')
         return redirect(url_for('ContactUs'))
     return render_template('contact.html')
+
+@app.route("/get_social_links")
+def get_social_links():
+    # Fetch social links from Firestore
+    social_links_ref = db.collection('socialLinks')
+    social_links = social_links_ref.stream()
+
+    # Extract name and url from each document
+    social_links_data = [
+        {
+            'url': link.to_dict().get('url', '#')
+        } for link in social_links
+    ]
+
+    # Return the data as JSON
+    return jsonify(social_links_data)
+
 
 freezer = Freezer(app)
 
