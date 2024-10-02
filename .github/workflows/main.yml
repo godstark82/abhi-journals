@@ -28,15 +28,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           
-
       - name: Set Firebase credentials
-        run: |
-          echo ${{ secrets.FIREBASE_CREDENTIALS }} > firebase_credentials.json
-        shell: bash
-
-      - name: Set environment variable for Firebase
-        run: |
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$PWD/firebase_credentials.json" >> $GITHUB_ENV
+        env: 
+          FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
+        run: echo "FIREBASE_CREDENTIALS='$FIREBASE_CREDENTIALS'" >> $GITHUB_ENV
 
       - name: Freeze the Flask app
         run: |
