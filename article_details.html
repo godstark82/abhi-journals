@@ -164,144 +164,224 @@
       
     
 
-<head>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            background-color: #edeff4;
-        }
+<style>
+    .article-container {
+        margin: 40px;
+        padding: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        color: black;
+        position: relative;
+    }
+    .article-title {
+        color: black;
+        margin-bottom: 20px;
+    }
+    .article-meta {
+        margin-bottom: 15px;
+        margin-right: 320px; /* Increased to accommodate larger image */
+    }
+    .article-image {
+        max-width: 300px; /* Increased from 200px */
+        height: auto;
+        border-radius: 8px;
+        position: absolute;
+        top: 60px; /* Adjusted to make room for the PDF button */
+        right: 20px;
+    }
+    .article-section {
+        margin-bottom: 30px;
+    }
+    .pdf-button {
+        background-color: #f0f0f0;
+        color: black;
+        padding: 10px 15px;
+        text-decoration: none;
+        border-radius: 5px;
+        display: inline-block;
+        transition: color 0.3s ease;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+    }
+    .pdf-button:hover {
+        color: #033e93;
+    }
+    .pdf-icon {
+        margin-right: 5px;
+    }
+</style>
 
-        .main-content {
-            margin: 20px;
-        }
 
-        header {
-            text-align: center;
-            padding: 10px;
-            background-color: #004080;
-            color: white;
-        }
+<div class="article-container">
+    
+    <a href="null" class="pdf-button">
+        <i class="fas fa-file-pdf pdf-icon"></i>
+        Download PDF Of Article
+    </a>
+    
 
-        h1 {
-            margin: 0;
-            font-size: 2em;
-            color: white;
-        }
+    
+    <img src="https://firebasestorage.googleapis.com/v0/b/journal-3c895.appspot.com/o/article_images%2F1727608758904_Screenshot%202024-05-16%20222322.png?alt=media&amp;token=35717297-9c3f-4ed5-81e4-a231d0c4739b" alt="THE EFFECTIVENESS OF DIFFERENT EMPLOYEE ONBOARDING PROGRAMS BY HR OF ORGANISATIONS" class="article-image">
+    
 
-        section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
-        }
-
-        h4 {
-            color: black;
-        }
-
-        section p {
-            color: black;
-        }
-
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
-        }
-
-        li {
-            color: black;
-        }
-    </style>
-    <title>Aim And Scope</title>
-</head>
-
-<body>
-    <div class="main-content">
-        <header>
-            <h1>Aim and Scope</h1>
-        </header>
-
-        <section>
-            <h4>Aim:</h4>
-            <p>
-                JANOLI International Journal of Economics and Management Science aspires to be a leading platform for
-                scholarly research and discourse at the intersection of economics and management. Our primary aim is to
-                advance knowledge in these fields by fostering rigorous academic inquiry, promoting innovative thinking,
-                and contributing to informed decision-making in the global economic landscape.
-            </p>
-        </section>
-
-        <section>
-            <h4>Scope:</h4>
-            <p>
-                JANOLI International Journal of Economics and Management Science invites original contributions, in the
-                domain of management and economics, from scholars, researchers, practitioners, and policymakers across a
-                wide spectrum of topics within these domains. Our scope encompasses, but is not limited to, the
-                following areas:
-            </p>
-            <h4>Economics:</h4>
-            <ul>
-                <li><strong>Microeconomics and Macroeconomics:</strong> Research addressing the behavior of individuals,
-                    firms, and governments, as well as the dynamics of national and global economies.</li>
-                <li><strong>Economic Policy and Analysis:</strong> Studies focusing on the development, evaluation, and
-                    impact of economic policies.</li>
-                <li><strong>International Economics:</strong> Exploration of issues related to international trade,
-                    finance, and economic development.</li>
-                <li><strong>Behavioral Economics:</strong> Investigations into the psychological factors influencing
-                    economic decision-making.</li>
-            </ul>
-
-            <h4>Management Science:</h4>
-            <ul>
-                <li><strong>Organizational Behaviour:</strong> Research on human behavior within organizations,
-                    leadership, and team dynamics.</li>
-                <li><strong>Strategic Management:</strong> Studies examining the formulation and implementation of
-                    strategic plans and their impact on organizational performance.</li>
-                <li><strong>Marketing and Consumer Behaviour:</strong> Exploration of marketing strategies, consumer
-                    preferences, and market trends.</li>
-                <li><strong>Human Resources and Talent Management Science:</strong> Insights into talent acquisition,
-                    development, and management.</li>
-                <li><strong>Innovation and Technology Management Science:</strong> Research on innovation processes,
-                    technology adoption, and their effects on businesses.</li>
-            </ul>
-
-            <h4>Interdisciplinary Studies:</h4>
-            <p>
-                JANOLI International Journal of Economics and Management Science recognizes the synergies between
-                economics and management and actively encourages interdisciplinary research. Contributions that explore
-                the interplay between these fields or bridge the gap between theory and practice are particularly
-                welcomed.
-            </p>
-
-            <h4>Global Perspective:</h4>
-            <p>
-                In an era of increasing economic globalization, JANOLI embraces a global perspective. We invite research
-                with international relevance, focusing on the implications of economic and managerial decisions across
-                diverse geographic and cultural contexts.
-            </p>
-
-            <h4>Practical Applicability:</h4>
-            <p>
-                While we value theoretical exploration, the JANOLI International Journal of Economics and Management
-                Science places a strong emphasis on practical applicability. We seek research that provides actionable
-                insights and contributes to the betterment of business practices, policymaking, and society as a whole.
-            </p>
-        </section>
-
-        <section>
-            <h4>Editorial Commitment</h4>
-            <p>
-                Our commitment to academic rigor is unwavering. All submissions to JANOLI undergo a rigorous peer-review
-                process, ensuring the highest quality and credibility of published content. Join us in this intellectual
-                journey to advance knowledge, solve real-world challenges, and inspire positive change in economics and
-                management. We look forward to welcoming a diverse community of scholars and practitioners who share our
-                passion for these dynamic and influential fields.
-            </p>
-        </section>
+    <h5 class="article-title">THE EFFECTIVENESS OF DIFFERENT EMPLOYEE ONBOARDING PROGRAMS BY HR OF ORGANISATIONS</h5>
+    
+    <div class="article-meta">
+        <p><strong>Document Type:</strong> my journal</p>
+        <p><strong>Authors:</strong> ADMIN</p>
+        <p><strong>Abstract:</strong></p>
+        <p>This study investigates the efficacy of several HR-implemented employee onboarding initiatives. Through an analysis of peer-reviewed papers, it compares socialization alongside informational approaches, and looks into the integration of virtual reality and AI-driven personalized onboarding, alongside responses to cross-cultural issues. It also looks at the effects of structured onboarding on employee retention and job satisfaction. The research highlights the importance of carefully thought-out onboarding procedures in maximizing organizational results. To improve employee experiences and build a healthy organizational culture, recommendations to feed HR experts include implementing efficient socialization techniques, investigating VR technology, and taking into account personalized AI-driven initiatives.</p>
     </div>
-</body>
+
+    
+    <div class="article-section">
+        <p><strong>Keywords:</strong> job,freelance</p> 
+    </div>
+    
+
+    
+    <div class="article-section">
+        <p><strong>Main Subjects:</strong> employyee</p> 
+    </div>
+    
+
+    
+    
+    <div class="article-section">
+        <p class="references-title">
+            <strong>References</strong>
+            <button class="toggle-references" data-state="closed"><i class="fas fa-chevron-down"></i></button>
+        </p>
+        <ol class="references-list" style="display: none;">
+            
+            <li>hula</li>
+            
+            <li>hula</li>
+            
+        </ol>
+    </div>
+    <script>
+        document.querySelector('.toggle-references').addEventListener('click', function() {
+            var button = this;
+            var icon = button.querySelector('i');
+            var list = document.querySelector('.references-list');
+            if (button.dataset.state === 'closed') {
+                list.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                button.dataset.state = 'open';
+            } else {
+                list.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                button.dataset.state = 'closed';
+            }
+        });
+    </script>
+    
+</div>
+
+<div class="article-container">
+    
+    <a href="url.com" class="pdf-button">
+        <i class="fas fa-file-pdf pdf-icon"></i>
+        Download PDF Of Article
+    </a>
+    
+
+    
+    <img src="https://firebasestorage.googleapis.com/v0/b/journal-3c895.appspot.com/o/article_images%2F1727606303944_Screenshot%202024-09-28%20221008.png?alt=media&amp;token=94b6f26b-f9b7-4325-bd3a-53942e773af0" alt="Privacy Policy For Information And Communication Systems Of E-Business" class="article-image">
+    
+
+    <h5 class="article-title">Privacy Policy For Information And Communication Systems Of E-Business</h5>
+    
+    <div class="article-meta">
+        <p><strong>Document Type:</strong> Original Article</p>
+        <p><strong>Authors:</strong> ADMIN</p>
+        <p><strong>Abstract:</strong></p>
+        <p>E-business offers huge opportunities, but his conduct involves a serious threat. Numerous studies have shown that internet fraud is one of the fastest growing types of crime and the losses caused by this practice are billions of dollars annually. Purpose of this article is to introduce the basic principles of security policy in communication and information systems for e-business. The article presents the main types and sources of threats to information and information systems, and how to protect your software and personal data, for example, companies with Europe-wide operations. Pointed out ways to implement best practices that help to prevent any hazards. The domestic market for e-commerce is the fastest-growing sector of the trade. The fact is that the percentage of shops and online shopping is growing faster than the number of Internet users in Poland. In order to maintain the current pace of development of e-commerce, however, is to build public confidence in the form of exchange of goods and services. This cannot be achieved without ensuring maximum safety in all processes related to e-shopping.
+
+</p>
+    </div>
+
+    
+    <div class="article-section">
+        <p><strong>Keywords:</strong> information and communication systems,data protection,e-business</p> 
+    </div>
+    
+
+    
+    <div class="article-section">
+        <p><strong>Main Subjects:</strong> Management</p> 
+    </div>
+    
+
+    
+    
+    <div class="article-section">
+        <p class="references-title">
+            <strong>References</strong>
+            <button class="toggle-references" data-state="closed"><i class="fas fa-chevron-down"></i></button>
+        </p>
+        <ol class="references-list" style="display: none;">
+            
+            <li>Almarabeh</li>
+            
+            <li>T.</li>
+            
+            <li>&amp; Majdalawi</li>
+            
+            <li>Y. K. (2019). Cloud Computing of E-commerce. Modern Applied Science</li>
+            
+            <li>13(1)</li>
+            
+            <li>27-35.
+Babenko</li>
+            
+            <li>V.</li>
+            
+            <li>Kulczyk</li>
+            
+            <li>Z.</li>
+            
+            <li>Perevosova</li>
+            
+            <li>I.</li>
+            
+            <li>Syniavska</li>
+            
+            <li>O.</li>
+            
+            <li>&amp; Davydova</li>
+            
+            <li>O. (2019). Factors of the development of international e-commerce under the conditions of globalization. In SHS Web of Conferences (Vol. 65</li>
+            
+            <li>p. 04016). EDP Sciences.</li>
+            
+        </ol>
+    </div>
+    <script>
+        document.querySelector('.toggle-references').addEventListener('click', function() {
+            var button = this;
+            var icon = button.querySelector('i');
+            var list = document.querySelector('.references-list');
+            if (button.dataset.state === 'closed') {
+                list.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+                button.dataset.state = 'open';
+            } else {
+                list.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+                button.dataset.state = 'closed';
+            }
+        });
+    </script>
+    
+</div>
+
+
 
 
 

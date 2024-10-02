@@ -31,7 +31,7 @@
                 <nav class="navbar navbar-expand-sm bg-dark p-0">
                     <ul class="navbar-nav ml-n2">
                         <li class="nav-item border-right border-secondary">
-                            <a class="nav-link text-body small" href="#">Monday, January 1, 2045</a>
+                            <a class="nav-link text-body small" href="#" id="current_date">Monday, January 1, 2045</a>
                         </li>
                         <li class="nav-item border-right border-secondary">
                             <a class="nav-link text-body small" href="/contact.html">Contact</a>
@@ -163,127 +163,249 @@
     <!-- Breaking News End -->
       
     
+<style>
+    .flash-message-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        text-align: center;
+    }
+
+    .alert {
+        display: inline-block;
+        margin: 10px auto;
+        padding: 15px 40px 15px 15px;
+        color: #fff;
+        background-color: rgba(40, 167, 69, 0.8);
+        /* Green transparent background */
+        border-radius: 5px;
+        animation: slideDown 0.5s ease-out;
+        position: relative;
+    }
+
+    .alert.alert-success {
+        background-color: rgba(40, 167, 69, 0.8);
+        /* Green transparent background */
+    }
+
+    .alert.alert-error {
+        background-color: rgba(220, 53, 69, 0.8);
+        /* Red transparent background */
+    }
+
+    .close-btn {
+        position: absolute;
+        top: 50%;
+        right: 10px;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #fff;
+        font-size: 24px;
+        /* Increased size */
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+</style>
 <title>Contact Us</title>
 
-    <!-- Contact Start -->
-    <div class="container-fluid mt-5 pt-3">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="section-title mb-0">
-                        <h4 class="m-0 text-uppercase font-weight-bold">Contact Us For Any Queries</h4>
-                    </div>
-                    <div class="bg-white border border-top-0 p-4 mb-3">
-                        <div class="mb-4">
-                            <h6 class="text-uppercase font-weight-bold">Contact Info</h6>
-                            <p class="mb-4">The contact form is currently inactive. Get a functional and working contact form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
-							<div class="mb-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fa fa-map-marker-alt text-primary mr-2"></i>
-                                    <h6 class="font-weight-bold mb-0">Our Office</h6>
-                                </div>
-                                <p class="m-0">123 Street, New York, USA</p>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fa fa-envelope-open text-primary mr-2"></i>
-                                    <h6 class="font-weight-bold mb-0">Email Us</h6>
-                                </div>
-                                <p class="m-0">info@example.com</p>
-                            </div>
-                            <div class="mb-3">
-                                <div class="d-flex align-items-center mb-2">
-                                    <i class="fa fa-phone-alt text-primary mr-2"></i>
-                                    <h6 class="font-weight-bold mb-0">Call Us</h6>
-                                </div>
-                                <p class="m-0">+012 345 6789</p>
-                            </div>
-                        </div>
-                        <h6 class="text-uppercase font-weight-bold mb-3">Contact Us</h6>
-                        <form>
-                            <div class="form-row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control p-4" placeholder="Your Name" required="required"/>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="email" class="form-control p-4" placeholder="Your Email" required="required"/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <input type="text" class="form-control p-4" placeholder="Subject" required="required"/>
-                            </div>
-                            <div class="form-group">
-                                <textarea class="form-control" rows="4" placeholder="Message" required="required"></textarea>
-                            </div>
-                            <div>
-                                <button class="btn btn-primary font-weight-semi-bold px-4" style="height: 50px;"
-                                    type="submit">Send Message</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <!-- Social Follow Start -->
-                    <div class="mb-3">
-                        <div class="section-title mb-0">
-                            <h4 class="m-0 text-uppercase font-weight-bold">Follow Us</h4>
-                        </div>
-                        <div class="bg-white border border-top-0 p-3">
-                            <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #39569E;">
-                                <i class="fab fa-facebook-f text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                                <span class="font-weight-medium">12,345 Fans</span>
-                            </a>
-                            <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #52AAF4;">
-                                <i class="fab fa-twitter text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                                <span class="font-weight-medium">12,345 Followers</span>
-                            </a>
-                            <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #0185AE;">
-                                <i class="fab fa-linkedin-in text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                                <span class="font-weight-medium">12,345 Connects</span>
-                            </a>
-                            <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #C8359D;">
-                                <i class="fab fa-instagram text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                                <span class="font-weight-medium">12,345 Followers</span>
-                            </a>
-                            <a href="" class="d-block w-100 text-white text-decoration-none mb-3" style="background: #DC472E;">
-                                <i class="fab fa-youtube text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                                <span class="font-weight-medium">12,345 Subscribers</span>
-                            </a>
-                            <a href="" class="d-block w-100 text-white text-decoration-none" style="background: #055570;">
-                                <i class="fab fa-vimeo-v text-center py-4 mr-3" style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
-                                <span class="font-weight-medium">12,345 Followers</span>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Social Follow End -->
+<!-- Flash Message Section (at the top of the screen) -->
+<div class="flash-message-container">
+    
+    
+    
+</div>
 
-                    <!-- Newsletter Start -->
-                    <div class="mb-3">
-                        <div class="section-title mb-0">
-                            <h4 class="m-0 text-uppercase font-weight-bold">Newsletter</h4>
-                        </div>
-                        <div class="bg-white text-center border border-top-0 p-3">
-                            <p>Aliqu justo et labore at eirmod justo sea erat diam dolor diam vero kasd</p>
-                            <div class="input-group mb-2" style="width: 100%;">
-                                <input type="text" class="form-control form-control-lg" placeholder="Your Email">
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary font-weight-bold px-3">Sign Up</button>
-                                </div>
+<!-- Contact Start -->
+<div class="container-fluid mt-5 pt-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- Section Title -->
+                <div class="section-title mb-0">
+                    <h4 class="m-0 text-uppercase font-weight-bold">Contact Us For Any Queries</h4>
+                </div>
+                <div class="bg-white border border-top-0 p-4 mb-3">
+                    <div class="mb-4">
+                        <h6 class="text-uppercase font-weight-bold">Contact Info</h6>
+                        <p class="mb-4">The contact form is currently inactive. Get a functional and working contact
+                            form with Ajax & PHP in a few minutes. Just copy and paste the files, add a little code and
+                            you're done. <a href="https://htmlcodex.com/contact-form">Download Now</a>.</p>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-map-marker-alt text-primary mr-2"></i>
+                                <h6 class="font-weight-bold mb-0">Our Office</h6>
                             </div>
-                            <small>Lorem ipsum dolor sit amet elit</small>
+                            <p class="m-0">123 Street, New York, USA</p>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-envelope-open text-primary mr-2"></i>
+                                <h6 class="font-weight-bold mb-0">Email Us</h6>
+                            </div>
+                            <p class="m-0">info@example.com</p>
+                        </div>
+                        <div class="mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-phone-alt text-primary mr-2"></i>
+                                <h6 class="font-weight-bold mb-0">Call Us</h6>
+                            </div>
+                            <p class="m-0">+012 345 6789</p>
                         </div>
                     </div>
-                    <!-- Newsletter End -->
+                    <h6 class="text-uppercase font-weight-bold mb-3">Contact Us</h6>
+                    <form action="/contact.html" method="post">
+                        <div class="form-row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control p-4" placeholder="Your Name"
+                                        required="required" name="name" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="email" class="form-control p-4" placeholder="Your Email"
+                                        required="required" name="email" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="tel" class="form-control p-4" placeholder="Phone No."
+                                        required="required" name="phone" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control p-4" placeholder="Subject"
+                                        required="required" name="subject" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="questiontype">Question Type</label>
+                            <select class="form-control p-4" name="questiontype" id="questiontype" title="Please select a question type">
+                                <option value="Subscribe Journal">Subscribe Journal</option>
+                                <option value="Login Error">Login Error</option>
+                                <option value="Registration Error">Registration Error</option>
+                                <option value="Problem with Sending Manuscript">Problem with Sending Manuscript</option>
+                                <option value="Contact With Editorial Office">Contact With Editorial Office</option>
+                                <option value="Send Suggestion">Send Suggestion</option>
+                                <option value="Send a Complaint">Send a Complaint</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <textarea class="form-control" rows="4" placeholder="Message" required="required"
+                                name="message"></textarea>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary font-weight-semi-bold px-4" style="height: 50px;"
+                                type="submit">Send Message</button>
+                        </div>
+                    </form>
                 </div>
+            </div>
+            <div class="col-lg-4">
+                <!-- Social Follow Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Follow Us</h4>
+                    </div>
+                    <div class="bg-white border border-top-0 p-3">
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3"
+                            style="background: #39569E;">
+                            <i class="fab fa-facebook-f text-center py-4 mr-3"
+                                style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Fans</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3"
+                            style="background: #52AAF4;">
+                            <i class="fab fa-twitter text-center py-4 mr-3"
+                                style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3"
+                            style="background: #0185AE;">
+                            <i class="fab fa-linkedin-in text-center py-4 mr-3"
+                                style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Connects</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3"
+                            style="background: #C8359D;">
+                            <i class="fab fa-instagram text-center py-4 mr-3"
+                                style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none mb-3"
+                            style="background: #DC472E;">
+                            <i class="fab fa-youtube text-center py-4 mr-3"
+                                style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Subscribers</span>
+                        </a>
+                        <a href="" class="d-block w-100 text-white text-decoration-none" style="background: #055570;">
+                            <i class="fab fa-vimeo-v text-center py-4 mr-3"
+                                style="width: 65px; background: rgba(0, 0, 0, .2);"></i>
+                            <span class="font-weight-medium">12,345 Followers</span>
+                        </a>
+                    </div>
+                </div>
+                <!-- Social Follow End -->
+
+                <!-- Newsletter Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h4 class="m-0 text-uppercase font-weight-bold">Newsletter</h4>
+                    </div>
+                    <div class="bg-white text-center border border-top-0 p-3">
+                        <p>Aliqu justo et labore at eirmod justo sea erat diam dolor diam vero kasd</p>
+                        <div class="input-group mb-2" style="width: 100%;">
+                            <input type="text" class="form-control form-control-lg" placeholder="Your Email">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary font-weight-bold px-3">Sign Up</button>
+                            </div>
+                        </div>
+                        <small>Lorem ipsum dolor sit amet elit</small>
+                    </div>
+                </div>
+                <!-- Newsletter End -->
             </div>
         </div>
     </div>
-    <!-- Contact End -->
-    
+</div>
+<!-- Contact End -->
+<script>
+    // Auto-hide flash message after 5 seconds
+    setTimeout(function () {
+        let flashMessage = document.querySelector('.flash-message-container');
+        if (flashMessage) {
+            flashMessage.style.display = 'none';
+        }
+    }, 5000);
+
+    // Close button functionality
+    document.addEventListener('click', function (e) {
+        if (e.target && e.target.className == 'close-btn') {
+            e.target.parentElement.style.display = 'none';
+        }
+    });
+</script>
+
 
 <!-- Footer Start -->
 <div class="container-fluid bg-dark pt-3 px-sm-3 px-md-5 mt-5">
