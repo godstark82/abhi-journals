@@ -16,14 +16,22 @@ app.secret_key = 'journalwebx8949328001'
 # Fetch Firebase credentials from environment variable
 firebase_credentials = os.environ.get('FIREBASE_CREDENTIALS')
 
+print("Python version:", sys.version)
+print("Environment variables:", {k: v for k, v in os.environ.items() if not k.startswith('FIREBASE_')})
+print("FIREBASE_CREDENTIALS length:", len(firebase_credentials) if firebase_credentials else 'Not set')
+print("FIREBASE_CREDENTIALS type:", type(firebase_credentials))
+print("FIREBASE_CREDENTIALS first 10 chars:", firebase_credentials[:10] if firebase_credentials else 'Not set')
+
 if not firebase_credentials:
     raise Exception("Firebase credentials are not set in environment variables.")
 
 try:
+    # Try to remove any extra quotes that might be causing issues
+    firebase_credentials = firebase_credentials.strip("'\"")
     cred_dict = json.loads(firebase_credentials)
 except json.JSONDecodeError as e:
     print(f"Error decoding JSON: {e}")
-    print(f"Received value: {firebase_credentials}")
+    print(f"Received value (first 50 chars): {firebase_credentials[:50]}")
     raise
 
 # Initialize Firebase using the credentials from the environment
