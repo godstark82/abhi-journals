@@ -161,3 +161,38 @@
     
 })(jQuery);
 
+// Fetch social links when the page loads
+document.addEventListener("DOMContentLoaded", function() {
+    fetch('/get_social_links')
+        .then(response => response.json())
+        .then(data => {
+            // Assuming you get an array of URLs in the same order as your social icons
+            const socialLinks = data;
+
+            // Assign URLs to the respective icons
+            document.getElementById('twitter-link').href = socialLinks[3].url;
+            document.getElementById('facebook-link').href = socialLinks[0].url;
+            document.getElementById('linkedin-link').href = socialLinks[2].url;
+            document.getElementById('instagram-link').href = socialLinks[1].url;
+            document.getElementById('youtube-link').href = socialLinks[4].url;
+
+            // Assign URLs to the respective icons in the footer
+            document.getElementById('facebook-link-footer').href = socialLinks[0].url;
+            document.getElementById('twitter-link-footer').href = socialLinks[3].url;
+            document.getElementById('instagram-link-footer').href = socialLinks[1].url;
+            document.getElementById('linkedin-link-footer').href = socialLinks[2].url;
+            document.getElementById('youtube-link-footer').href = socialLinks[4].url;
+        })
+        .catch(error => console.error('Error fetching social links:', error));
+});
+
+// JavaScript to get and format the current date
+const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+const today = new Date();
+
+// Format the date and remove commas
+let formattedDate = today.toLocaleDateString('en-US', options);
+formattedDate = formattedDate.replace(/,/g, ''); // Remove commas
+
+// Insert the formatted date into the navbar
+document.getElementById('current_date').textContent = formattedDate;

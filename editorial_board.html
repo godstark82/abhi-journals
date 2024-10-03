@@ -31,7 +31,7 @@
                 <nav class="navbar navbar-expand-sm bg-dark p-0">
                     <ul class="navbar-nav ml-n2">
                         <li class="nav-item border-right border-secondary">
-                            <a class="nav-link text-body small" href="#" id="current_date">Monday, January 1, 2045</a>
+                            <a class="nav-link text-body small" href="#" id="current_date">Loading date...</a>
                         </li>
                         <li class="nav-item border-right border-secondary">
                             <a class="nav-link text-body small" href="/contact.html">Contact</a>
@@ -164,6 +164,7 @@
     <!-- Breaking News End -->
       
     
+
 <head>
     <title>Editorial Board</title>
     <style>
@@ -171,33 +172,37 @@
             font-family: Arial, sans-serif;
             background-color: #f5f5f5;
         }
-        .main-content{
-            margin: 100px;
+
+        .main-content {
+            margin: 20px;
+            padding: 20px;
         }
 
         .editor-card {
             background-color: #f0f4ff;
             padding: 20px;
-            border-radius: 8px;  
-            margin-bottom: 50px;
-            max-width: 1400px;
-            border-left: 5px solid black;  /* Vertical black line */ 
+            border-radius: 8px;
+            margin-bottom: 30px;
+            max-width: 100%;
+            border-left: 5px solid black;
         }
-        .editor-card:hover{
+
+        .editor-card:hover {
             box-shadow: 0 0 10px #666666;
             border-top: none;
-            
         }
 
         .card-content {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .editor-details p {
             margin: 0;
             font-size: 1em;
             color: black;
+            word-wrap: break-word;
         }
 
         h3 {
@@ -205,90 +210,42 @@
             color: black;
         }
 
+        @media (min-width: 768px) {
+            .main-content {
+                margin: 50px;
+            }
+
+            .editor-card {
+                max-width: 700px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .main-content {
+                margin: 100px;
+            }
+
+            .editor-card {
+                max-width: 1000px;
+            }
+        }
     </style>
 </head>
+
 <body>
     <div class="main-content">
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
+        <div class="editor-card">
+            <h3>Chief Editor:</h3>
+            <div class="card-content">
+                <div class="editor-details">
+                    <p><strong>Dr. Ilona Paweloszek</strong></p>
+                    <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
+                    <p>Email: ilona.paweloszek@pcz.pl</p>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
-            </div>
-        </div>
-    </div>
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
-            </div>
-        </div>
-    </div>
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
-            </div>
-        </div>
-    </div>
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
-            </div>
-        </div>
-    </div>
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
-            </div>
-        </div>
-    </div>
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
-            </div>
-        </div>
-    </div>
-    <div class="editor-card">
-        <h3>Chief Editor:</h3>
-        <div class="card-content">
-            <div class="editor-details">
-                <p><strong>Dr. Ilona Paweloszek</strong></p>
-                <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                <p>Email: ilona.paweloszek@pcz.pl</p>
-            </div>
-        </div>
-    </div>
     </div>
 
 </body>
@@ -339,33 +296,6 @@
 
 <!-- Template Javascript -->
 <script src="/static/js/main.js"></script>
-
-<script>
-    // Fetch social links when the page loads
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('/get_social_links')
-            .then(response => response.json())
-            .then(data => {
-                // Assuming you get an array of URLs in the same order as your social icons
-                const socialLinks = data;
-
-                // Assign URLs to the respective icons
-                document.getElementById('twitter-link').href = socialLinks[3].url;
-                document.getElementById('facebook-link').href = socialLinks[0].url;
-                document.getElementById('linkedin-link').href = socialLinks[2].url;
-                document.getElementById('instagram-link').href = socialLinks[1].url;
-                document.getElementById('youtube-link').href = socialLinks[4].url;
-
-                // Assign URLs to the respective icons in the footer
-                document.getElementById('facebook-link-footer').href = socialLinks[0].url;
-                document.getElementById('twitter-link-footer').href = socialLinks[1].url;
-                document.getElementById('instagram-link-footer').href = socialLinks[2].url;
-                document.getElementById('linkedin-link-footer').href = socialLinks[3].url;
-                document.getElementById('youtube-link-footer').href = socialLinks[4].url;
-            })
-            .catch(error => console.error('Error fetching social links:', error));
-    });
-</script>
 
 </body>
 

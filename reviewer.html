@@ -31,7 +31,7 @@
                 <nav class="navbar navbar-expand-sm bg-dark p-0">
                     <ul class="navbar-nav ml-n2">
                         <li class="nav-item border-right border-secondary">
-                            <a class="nav-link text-body small" href="#" id="current_date">Monday, January 1, 2045</a>
+                            <a class="nav-link text-body small" href="#" id="current_date">Loading date...</a>
                         </li>
                         <li class="nav-item border-right border-secondary">
                             <a class="nav-link text-body small" href="/contact.html">Contact</a>
@@ -317,33 +317,6 @@
 
 <!-- Template Javascript -->
 <script src="/static/js/main.js"></script>
-
-<script>
-    // Fetch social links when the page loads
-    document.addEventListener("DOMContentLoaded", function() {
-        fetch('/get_social_links')
-            .then(response => response.json())
-            .then(data => {
-                // Assuming you get an array of URLs in the same order as your social icons
-                const socialLinks = data;
-
-                // Assign URLs to the respective icons
-                document.getElementById('twitter-link').href = socialLinks[3].url;
-                document.getElementById('facebook-link').href = socialLinks[0].url;
-                document.getElementById('linkedin-link').href = socialLinks[2].url;
-                document.getElementById('instagram-link').href = socialLinks[1].url;
-                document.getElementById('youtube-link').href = socialLinks[4].url;
-
-                // Assign URLs to the respective icons in the footer
-                document.getElementById('facebook-link-footer').href = socialLinks[0].url;
-                document.getElementById('twitter-link-footer').href = socialLinks[1].url;
-                document.getElementById('instagram-link-footer').href = socialLinks[2].url;
-                document.getElementById('linkedin-link-footer').href = socialLinks[3].url;
-                document.getElementById('youtube-link-footer').href = socialLinks[4].url;
-            })
-            .catch(error => console.error('Error fetching social links:', error));
-    });
-</script>
 
 </body>
 
