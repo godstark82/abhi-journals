@@ -90,19 +90,74 @@ def archive():
 
 @app.route("/about_jrnl.html")
 def about_journal():
-    return render_template('screens/journal_info/about_jrnl.html')
+
+    doc_id = "s7zN7Ce9XCsEOP63CtUb"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+        return render_template('screens/journal_info/about_jrnl.html', content=content)
+    else:
+        return "Document not found", 404
+
 @app.route("/aimandscope.html")
 def aimnscope():
-    return render_template('screens/journal_info/aimandscope.html')
+
+    doc_id = "w45mTbOFFg54c7HSU4Ay"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+        return render_template('screens/journal_info/aimandscope.html', content=content)
+    else:
+        return "Document not found", 404
 @app.route("/editorial_board.html")
 def editboard():
-    return render_template('screens/journal_info/editorial_board.html')
+    # Fetch editorial board data from Firestore
+    editorial_board_ref = db.collection('editorialBoard').order_by('createdAt', direction='ASCENDING')
+    editorial_board = editorial_board_ref.stream()
+    
+    # Extract specific data from the fetched documents
+    board_members = [{
+        'role': member.to_dict().get('role', 'Unknown Role'),
+        'name': member.to_dict().get('name', 'Unknown Name'),
+        'institution': member.to_dict().get('institution', 'Unknown Institution'),
+        'email': member.to_dict().get('email', 'Unknown Email')
+    } for member in editorial_board]
+    
+    return render_template('screens/journal_info/editorial_board.html', board_members=board_members)
 @app.route("/publication_ethics.html")
 def pubethics():
-    return render_template('screens/journal_info/publication_ethics.html')
+
+
+    doc_id = "W6bSKPFmVh6ejZMVxsWr"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+        return render_template('screens/journal_info/publication_ethics.html', content=content)
+    else:
+        return "Document not found", 404
+    
 @app.route("/peerrevpro.html")
 def peerpro():
-    return render_template('screens/journal_info/peerrevpro.html')
+
+    doc_id = "CZpNkvbYXi0Ae5RQASJp"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+    
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+        return render_template('screens/journal_info/peerrevpro.html', content=content)
+    else:
+        return "Document not found", 404
 @app.route("/indandabs.html")
 def indnabs():
     return render_template('screens/journal_info/indandabs.html')

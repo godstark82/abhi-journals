@@ -72,16 +72,18 @@
 
 <body>
     <div class="main-content">
+        {% for member in board_members %}
         <div class="editor-card">
-            <h3>Chief Editor:</h3>
+            <h3>{{ member.role }}</h3>
             <div class="card-content">
                 <div class="editor-details">
-                    <p><strong>Dr. Ilona Paweloszek</strong></p>
-                    <p>Assistant Professor, Czestochowa University of Technology, Poland</p>
-                    <p>Email: ilona.paweloszek@pcz.pl</p>
+                    <p><strong>{{ member.name }}</strong></p>
+                    <p>{{ member.institution }}</p>
+                    <p>Email: <a href="mailto:{{ member.email }}" style="color: black; text-decoration: none;" onmouseover="this.style.color='#033e99';" onmouseout="this.style.color='black';">{{ member.email }}</a></p>
                 </div>
             </div>
         </div>
+        {% endfor %}
     </div>
 
 </body>
