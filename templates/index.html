@@ -81,28 +81,11 @@
                             <h4 class="m-0 text-uppercase font-weight-bold">Welcome To Journal</h4>
                         </div>
                     </div>
-                    <div class="col-12">
-                        <h6 class="font-weight-bold mt-3 mb-4">Welcome to Shanti Educational Research Foundation, India</h6>
-                        <p style="color: black; text-align: justify;">A platform to promote multi-disciplinary research in Science, Technology, and Management, is an innovative nonprofit foundation for researchers/ academicians around the globe for research and developments that make this world a happy home for all living. We publish original research work in various journals, reference books, and monographs and organize international conferences and workshops throughout the year under the leadership of  Prof. (Dr.) Sanjeev Kumar, Prof. (Dr.) Anirudh Pradhan, Prof. (Dr.) Dorota Jelonek, Prof. (Dr.) Ilona Paweloszek, Prof ( Dr) Mamta Chahar and Prof. (Dr.) Paula Bajdor is our mentor with a team of great professors worldwide. You may join us in any/ all events.</p>
 
-                        <h6 class="font-weight-bold mt-3 mb-4">JANOLI International Journal of Economics and Management Science</h6>
-                        <p style="color: black; text-align: justify;">JANOLI International Journal of Economics and Management Science is an open-access journal affiliated with Shanti Educational Research Foundation India The journal focuses on disseminating the latest research in the field of economics and management science with its all applied domains and its role in decision-making, as well as their relationships to cognate disciplines including Economics, Finance, Management, blockchain Management, Marketing, Statistics, Operations Research and Engineering. The journal adheres to a stringent double-blind peer review policy to maintain the good quality of research publication. With an acceptance rate of 15% of submitted manuscripts, the journal encourages recent discoveries and innovations comprising theoretical, conceptual and empirical research in management and applied research. <br>The Journal also publishes extensively for managerial IT professionals and industry practitioners in the fields of economics, business management, information systems and decision analysis.</p>
-
-                        <h6 class="font-weight-bold mt-3 mb-4">Scope:</h6>
-                        <p style="color: black; text-align: justify;"></p>
-                        <h6 class="font-weight-bold mt-3 mb-4">Economics:</h6>
-                        <p style="color: black; text-align: justify;">Microeconomics and Macroeconomics, International Economics, Development Economics, Agricultural Economics, Labor Economics, Public Economics, Health Economics, Environmental and Resource Economics, Econometrics and Quantitative Methods, Economic Policy Analysis.</p>
-
-                        <h6 class="font-weight-bold mt-3 mb-4">Management Science:</h6>
-                        <p style="color: black; text-align: justify;">Strategic Management, Organizational Behavior, Human Resource Management, Operations Management, Supply Chain Management, Marketing Management, Financial Management, Entrepreneurship and Innovation, Management Information Systems, Business Ethics and Corporate Governance.</p>
-
-                        <h6 class="font-weight-bold mt-3 mb-4">Interdisciplinary Studies:</h6>
-                        <p style="color: black; text-align: justify;">Economic and Management implications of technology and innovation, Behavioral Economics and Management, Global Business and Economics, Policy and Institutional Analysis, Sustainability and Corporate Social Responsibility.</p>
-
-                        
+                    <div style="color: black;">
+                        {{ content | safe }}
                     </div>
-                    
-                
+
                 </div>
             </div>
 
@@ -134,32 +117,39 @@
                         <p style="color: #31404B">
                             <i class="fas fa-cube"></i>
                             <b>Chief Editor</b> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr. Ilona
-                                Paweloszek</a>
+                            {% if chief_editor_name %}
+                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{chief_editor_name }}</a>
+                            {% else %}
+                                <p>No Chief Editor found.</p>
+                            {% endif %}
                         </p>
+
                         <p style="color: #31404B">
                             <i class="fas fa-cube"></i>
                             <b> Associate Editors</b> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr Mahesh
-                                Joshi</a>
+                            {% if associate_editors %}
+                            {% for associate in associate_editors %}
+                            <a href="/editorial_board.html"
+                                style="color: #033e93;text-decoration: none;">{{ associate.name }}</a> <br>
+                            {% endfor %}
+                            {% else %}
+                            <p>No Associate Editors found.</p>
+                            {% endif %}
                         </p>
+
                         <p style="color: #31404B">
                             <i class="fas fa-cube"></i>
                             <b>Editors</b> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr. Dalia
-                                Younis</a> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr Paula
-                                Bajdor</a> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr Andrii
-                                Galkin</a> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr Helena
-                                Fidlerova</a> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr Maya
-                                Sari</a> <br>
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">Dr. Rusudan
-                                Kinkladze</a> <br>
+                            {% if editors %}
+                            {% for editor in editors %}
+                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ editor.name
+                                }}</a> <br>
+                            {% endfor %}
+                            {% else %}
+                        <p>No Editors found.</p>
+                        {% endif %}
                         </p>
-                        </p>
+                        
                     </div>
                 </div>
 
@@ -209,42 +199,47 @@
                 </div>
                 <!-- Articles in Press End -->
 
-                    <!-- Table Start -->
-                    <div class="mb-3">
-                        <div class="section-title mb-0">
-                            <h5 class="m-0 text-uppercase font-weight-bold">JANOLI International Journals</h5>
-                        </div>
-                        <div class="bg-white border border-top-0 p-3">
-                            <h6 class="m-0 text-uppercase font-weight-bold">Facts and Figures</h6>
-                            <table class="table table-bordered mt-3" style="color: #31404b;">
-                                <tbody>
-                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'" onmouseout="this.style.backgroundColor=''">
-                                        <td>Issue Per Year</td>
-                                        <td>02</td>
-                                    </tr>
-                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'" onmouseout="this.style.backgroundColor=''">
-                                        <td>Number of Volumes</td>
-                                        <td>02</td>
-                                    </tr>
-                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'" onmouseout="this.style.backgroundColor=''">
-                                        <td>Number of Issues</td>
-                                        <td>01</td>
-                                    </tr>
-                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'" onmouseout="this.style.backgroundColor=''">
-                                        <td>Number of Articles</td>
-                                        <td>05</td>
-                                    </tr>
-                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'" onmouseout="this.style.backgroundColor=''">
-                                        <td>Number of Contributors</td>
-                                        <td>10</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                <!-- Table Start -->
+                <div class="mb-3">
+                    <div class="section-title mb-0">
+                        <h5 class="m-0 text-uppercase font-weight-bold">JANOLI International Journals</h5>
                     </div>
-                    <!-- Table End -->
+                    <div class="bg-white border border-top-0 p-3">
+                        <h6 class="m-0 text-uppercase font-weight-bold">Facts and Figures</h6>
+                        <table class="table table-bordered mt-3" style="color: #31404b;">
+                            <tbody>
+                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                    onmouseout="this.style.backgroundColor=''">
+                                    <td>Issue Per Year</td>
+                                    <td>02</td>
+                                </tr>
+                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                    onmouseout="this.style.backgroundColor=''">
+                                    <td>Number of Volumes</td>
+                                    <td>02</td>
+                                </tr>
+                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                    onmouseout="this.style.backgroundColor=''">
+                                    <td>Number of Issues</td>
+                                    <td>01</td>
+                                </tr>
+                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                    onmouseout="this.style.backgroundColor=''">
+                                    <td>Number of Articles</td>
+                                    <td>05</td>
+                                </tr>
+                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                    onmouseout="this.style.backgroundColor=''">
+                                    <td>Number of Contributors</td>
+                                    <td>10</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- Table End -->
 
-                <!-- Tags Start -->
+                <!-- General Start -->
                 <div class="mb-3">
                     <div class="section-title mb-0">
                         <h5 class="m-0 text-uppercase font-weight-bold">General</h5>
@@ -272,7 +267,7 @@
                 </div>
 
             </div>
-            <!-- Tags End -->
+            <!-- General End -->
         </div>
     </div>
 </div>

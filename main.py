@@ -37,7 +37,46 @@ db = firestore.client()
 
 @app.route("/")
 def Home():
-    return render_template('index.html')
+
+    doc_id = "8061MAE63evqpTPdIvlz"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+    else:
+        content = "Document not found"
+
+    # Fetch Chief Editor
+    chief_editor_ref = db.collection('editorialBoard').where('role', '==', 'Chief Editor').limit(1)
+    chief_editor_docs = chief_editor_ref.stream()
+    
+    chief_editor_name = "Unknown"
+    for doc in chief_editor_docs:
+        chief_editor_name = doc.to_dict().get('name', 'Unknown')
+        break  # cause only need the first document
+
+    # Fetch Associate Editors
+    associate_editors_ref = db.collection('editorialBoard').where('role', '==', 'Associate Editor')
+    associate_editors = associate_editors_ref.stream()
+    
+    associate_editors_list = [{
+        'name': editor.to_dict().get('name', 'Unknown Name'),
+    } for editor in associate_editors]
+
+
+    # Fetch editorial board members whose role is 'editor'
+    editorial_board_ref = db.collection('editorialBoard').where('role', '==', 'Editor')
+    editorial_board = editorial_board_ref.stream()
+
+    # Extract relevant data from the fetched documents
+    editors_list = [{
+        'name': member.to_dict().get('name', 'Unknown Name'),
+    } for member in editorial_board]
+
+    # Pass both content and editors' data to the template
+    return render_template('index.html', content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list)
 @app.route("/current_issue.html")
 def currissue():
     # Fetch articles from Firestore
@@ -118,8 +157,7 @@ def aimnscope():
 @app.route("/editorial_board.html")
 def editboard():
     # Fetch editorial board data from Firestore
-    editorial_board_ref = db.collection('editorialBoard').order_by('createdAt', direction='ASCENDING')
-    editorial_board = editorial_board_ref.stream()
+    editorial_board_ref = db.collection('editorialBoard').stream()
     
     # Extract specific data from the fetched documents
     board_members = [{
@@ -127,9 +165,16 @@ def editboard():
         'name': member.to_dict().get('name', 'Unknown Name'),
         'institution': member.to_dict().get('institution', 'Unknown Institution'),
         'email': member.to_dict().get('email', 'Unknown Email')
-    } for member in editorial_board]
+    } for member in editorial_board_ref]
+
+    # Define a custom sort order for roles
+    role_priority = {'Chief Editor': 1, 'Associate Editor': 2, 'Editor': 3}
+    
+    # Sort the members by their role based on priority
+    board_members.sort(key=lambda x: role_priority.get(x['role'], 999))
     
     return render_template('screens/journal_info/editorial_board.html', board_members=board_members)
+
 @app.route("/publication_ethics.html")
 def pubethics():
 
@@ -217,6 +262,17 @@ def reviewer():
         return "Document not found", 404
 @app.route("/contact.html", methods=['GET', 'POST'])
 def ContactUs():
+
+    doc_id = "ylhdV31SBbX3exH9olKj"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+    else:
+        return "Document not found", 404
+    
     if request.method == 'POST':
         name = request.form.get("name")
         email = request.form.get("email")
@@ -237,7 +293,7 @@ def ContactUs():
         db.collection("contact").add(data)
         flash('Your message has been successfully submitted!', 'success')
         return redirect(url_for('ContactUs'))
-    return render_template('contact.html')
+    return render_template('contact.html', content=content)
 
 @app.route("/get_social_links")
 def get_social_links():
