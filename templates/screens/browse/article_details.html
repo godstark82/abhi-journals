@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+    {% extends "layout.html" %}
 {% block body %}
 
 <style>
@@ -15,15 +15,12 @@
     }
     .article-meta {
         margin-bottom: 15px;
-        margin-right: 320px; /* Increased to accommodate larger image */
     }
     .article-image {
-        max-width: 300px; /* Increased from 200px */
+        max-width: 300px;
         height: auto;
         border-radius: 8px;
-        position: absolute;
-        top: 60px; /* Adjusted to make room for the PDF button */
-        right: 20px;
+        margin-bottom: 20px;
     }
     .article-section {
         margin-bottom: 30px;
@@ -36,15 +33,38 @@
         border-radius: 5px;
         display: inline-block;
         transition: color 0.3s ease;
-        position: absolute;
-        top: 20px;
-        right: 20px;
+        margin-bottom: 20px;
     }
     .pdf-button:hover {
         color: #033e93;
     }
     .pdf-icon {
         margin-right: 5px;
+    }
+    
+    @media (min-width: 768px) {
+        .article-meta {
+            margin-right: 320px;
+        }
+        .article-image {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+        }
+        .pdf-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            margin-bottom: 0;
+        }
+    }
+    
+    @media (max-width: 767px) {
+        .article-section {
+            overflow-wrap: break-word;
+            word-wrap: break-word;
+            hyphens: auto;
+        }
     }
 </style>
 
@@ -72,48 +92,24 @@
 
     {% if article.keywords %}
     <div class="article-section">
-        <p><strong>Keywords:</strong> {{ article.keywords|join(',') }}</p> 
+        <p><strong>Keywords:</strong> {{ article.keywords|join(', ') }}</p> 
     </div>
     {% endif %}
 
     {% if article.mainSubjects %}
     <div class="article-section">
-        <p><strong>Main Subjects:</strong> {{ article.mainSubjects|join(',') }}</p> 
+        <p><strong>Main Subjects:</strong> {{ article.mainSubjects|join(', ') }}</p> 
+    </div>
+    {% endif %}
+
+    {% if article.references %}
+    <div class="article-section">
+        <p><strong>References:</strong> {{ article.references|join(', ') }}</p> 
     </div>
     {% endif %}
 
     
-    {% if article.references %}
-    <div class="article-section">
-        <p class="references-title">
-            <strong>References</strong>
-            <button class="toggle-references" data-state="closed"><i class="fas fa-chevron-down"></i></button>
-        </p>
-        <ol class="references-list" style="display: none;">
-            {% for reference in article.references %}
-            <li>{{ reference }}</li>
-            {% endfor %}
-        </ol>
-    </div>
-    <script>
-        document.querySelector('.toggle-references').addEventListener('click', function() {
-            var button = this;
-            var icon = button.querySelector('i');
-            var list = document.querySelector('.references-list');
-            if (button.dataset.state === 'closed') {
-                list.style.display = 'block';
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
-                button.dataset.state = 'open';
-            } else {
-                list.style.display = 'none';
-                icon.classList.remove('fa-chevron-up');
-                icon.classList.add('fa-chevron-down');
-                button.dataset.state = 'closed';
-            }
-        });
-    </script>
-    {% endif %}
+    
 </div>
 {% endfor %}
 

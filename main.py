@@ -166,10 +166,30 @@ def subon():
     return render_template('screens/for_author/subonpaper.html')
 @app.route("/topics.html")
 def topic():
-    return render_template('screens/for_author/topics.html')
+
+    doc_id = "QoxjARRGKlL7BKUtcpQM"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+        return render_template('screens/for_author/topics.html', content=content)
+    else:
+        return "Document not found", 404
 @app.route("/author_gl.html")
 def authgl():
-    return render_template('screens/for_author/author_gl.html')
+
+    doc_id = "4OJKeKoJ3LStfoEU88Hu"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+        return render_template('screens/for_author/author_gl.html', content=content)
+    else:
+        return "Document not found", 404
 @app.route("/copyrightform.html")
 def crform():
     return render_template('screens/for_author/copyrightform.html')
@@ -184,7 +204,17 @@ def submitmanscr():
     return render_template('pages/submanuscript.html')
 @app.route("/reviewer.html")
 def reviewer():
-    return render_template('pages/reviewer.html')
+
+    doc_id = "GiZuANsNXJTxZdt8jQbR"
+    doc_ref = db.collection('pages').document(doc_id)
+    doc = doc_ref.get()
+
+    if doc.exists:
+        # Extract 'content' field from the document
+        content = doc.to_dict().get('content', '')
+        return render_template('pages/reviewer.html', content=content)
+    else:
+        return "Document not found", 404
 @app.route("/contact.html", methods=['GET', 'POST'])
 def ContactUs():
     if request.method == 'POST':
