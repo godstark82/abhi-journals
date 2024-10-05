@@ -196,3 +196,18 @@ formattedDate = formattedDate.replace(/,/g, ''); // Remove commas
 
 // Insert the formatted date into the navbar
 document.getElementById('current_date').textContent = formattedDate;
+
+  // Auto-hide flash message after 5 seconds
+setTimeout(function () {
+    let flashMessage = document.querySelector('.flash-message-container');
+    if (flashMessage) {
+        flashMessage.style.display = 'none';
+    }
+}, 5000);
+
+// Close button functionality
+document.addEventListener('click', function (e) {
+    if (e.target && e.target.className == 'close-btn') {
+        e.target.parentElement.style.display = 'none';
+    }
+});
