@@ -1,11 +1,10 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from flask_frozen import Freezer
-import os
-import json
-import firebase_admin
+import smtplib, os, json, firebase_admin, sys
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 from firebase_admin import credentials, firestore
 from dotenv import load_dotenv
-import sys
 
 # Load environment variables from .env file
 load_dotenv()
@@ -281,19 +280,52 @@ def ContactUs():
         questiontype = request.form.get("questiontype")
         message = request.form.get("message")
 
-        data = {
-            "name": name,
-            "email": email,
-            "phone": phone,
-            "subject": subject,
-            "questiontype": questiontype,
-            "message": message
-      }
-        
-        db.collection("contact").add(data)
+
+        send_email(name, email, phone, subject, questiontype, message)
+
         flash('Your message has been successfully submitted!', 'success')
         return redirect(url_for('ContactUs'))
+    
     return render_template('contact.html', content=content)
+
+def send_email(name, email, phone, subject, questiontype, message):
+    # Gmail SMTP server setup
+    sender_email = "pachauripankaj40@gmail.com"  # Replace with your Gmail email
+    receiver_email = "sms7mp@gmail.com"  # Replace with your Gmail email to receive the message
+    password = "uawa sqfi fwlr wggp"  # Replace with your Gmail password or app-specific password
+
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = f"New Contact Form Submission: {subject}"
+
+    body = f"""
+    You have received a new message from the contact form.
+
+    Name: {name}
+    Email: {email}
+    Phone: {phone}
+    Subject: {subject}
+    Question Type: {questiontype}
+
+    Message:
+    {message}
+    """
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    # Send the email via Gmail's SMTP server
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, password)
+        text = msg.as_string()
+        server.sendmail(sender_email, receiver_email, text)
+        server.quit()
+    except Exception as e:
+        print(f"Failed to send email. Error: {e}")
+
+
 
 @app.route("/get_social_links")
 def get_social_links():
