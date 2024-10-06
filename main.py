@@ -291,7 +291,7 @@ def ContactUs():
 def send_email(name, email, phone, subject, questiontype, message):
     # Gmail SMTP server setup
     sender_email = "pachauripankaj40@gmail.com"  # Replace with your Gmail email
-    receiver_email = "sms7mp@gmail.com"  # Replace with your Gmail email to receive the message
+    receiver_email = "pachauripankaj40@gmail.com"  # Replace with your Gmail email to receive the message
     password = "uawa sqfi fwlr wggp"  # Replace with your Gmail password or app-specific password
 
     msg = MIMEMultipart()
@@ -326,7 +326,6 @@ def send_email(name, email, phone, subject, questiontype, message):
         print(f"Failed to send email. Error: {e}")
 
 
-
 @app.route("/get_social_links")
 def get_social_links():
     # Fetch social links from Firestore
@@ -352,4 +351,4 @@ if __name__ == "__main__":
 
     # Uncomment this to generate the static files
     freezer.freeze()
-
+    
