@@ -41,8 +41,16 @@ def Home():
 
 @app.route(Routes.CURRENT_ISSUE)
 def currissue():
+    # Fetch active volumes
+    active_volumes = db.collection('volumes').where('isActive', '==', True).stream()
+    active_volume_ids = [vol.id for vol in active_volumes]
+    
+     # Fetch active issue IDs based on active volumes
+    active_issues = db.collection('issues').where('isActive', '==', True).where('volumeId', 'in', active_volume_ids).stream()
+    active_issue_ids = [issue.id for issue in active_issues]
+
     # Fetch articles from Firestore
-    articles_ref = db.collection('articles')
+    articles_ref = db.collection('articles').where('issueId', 'in', active_issue_ids)
     articles = articles_ref.stream()
     
     # Extract titles from articles
@@ -87,7 +95,18 @@ def byissue():
 
 @app.route(Routes.ARCHIVE)
 def archive():
-    return render_template(Paths.ARCHIVE)
+     # Fetch volumes from the Firestore (assuming you're using Firestore)
+    volumes_ref = db.collection('volumes').where('isActive', '==', True)
+    volumes = volumes_ref.stream()
+
+    # Collect the volume titles
+    active_volumes = [
+        (volume.to_dict().get('volumeNumber', 'N/A'), volume.to_dict().get('title', 'Untitled'))
+        for volume in volumes
+    ]
+
+    # Pass the active volumes to the template
+    return render_template(Paths.ARCHIVE, active_volumes=active_volumes)
 
 @app.route(Routes.ABOUT_JOURNAL)
 def about_journal():

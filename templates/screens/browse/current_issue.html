@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
+<title>Current Issue</title>
 <style>
     section {
         margin: 20px;
@@ -74,7 +75,6 @@
         }
     }
 </style>
-<title>Current Issue</title>
 
 <p class="total-articles">Total Results : {{ articles|length if articles else 0 }}</p>
 
