@@ -2,9 +2,10 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, f
 from flask_frozen import Freezer
 from db_instance import get_db
 from models.editorial_board_model import EditorialRole
-from services import editorial_service, journal_service, mail_service, page_service
+from services import editorial_service, journal_service, mail_service, page_service, social_link_service
 from routes import Routes
 from paths import Paths
+
 
 
 #! DB instance
@@ -33,7 +34,7 @@ def Home():
     associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
     chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
 
-    print(all_editorial_board_members)
+
     #! return the home page with the content and the editors' data
     return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list)
 
@@ -48,7 +49,7 @@ def currissue():
     article_data = [
         {
             'title': article.to_dict().get('title', 'No Title'),
-            'authors': article.to_dict().get('authors', 'Unknown Author'),
+            'authors': ', '.join([author.get('name', 'Unknown') for author in article.to_dict().get('authors', [])]),
             'createdAt': article.to_dict().get('createdAt', 'Unknown Date'),
             'image': article.to_dict().get('image', None),
             'pdf': article.to_dict().get('pdf', None)
@@ -68,7 +69,7 @@ def article_details():
         {
             'title': article.to_dict().get('title', 'No Title'),
             'documentType': article.to_dict().get('documentType', 'Unknown Type'),
-            'authors': article.to_dict().get('authors', []),
+            'authors': ', '.join([author.get('name', 'Unknown') for author in article.to_dict().get('authors', [])]),
             'pdf': article.to_dict().get('pdf', None),
             'abstractString': article.to_dict().get('abstractString', 'No abstract available'),
             'keywords': article.to_dict().get('keywords', []),
@@ -194,19 +195,7 @@ def ContactUs():
 
 @app.route(Routes.GET_SOCIAL_LINKS)
 def get_social_links():
-    # Fetch social links from Firestore
-    social_links_ref = db.collection('socialLinks')
-    social_links = social_links_ref.stream()
-
-    # Extract name and url from each document
-    social_links_data = [
-        {
-            'url': link.to_dict().get('url', '#')
-        } for link in social_links
-    ]
-
-    # Return the data as JSON
-    return jsonify(social_links_data)
+    return social_link_service.get_social_links()
 
 
 freezer = Freezer(app)

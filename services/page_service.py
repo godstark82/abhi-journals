@@ -1,6 +1,5 @@
 from db_instance import get_db
 
-
 def get_page(page_id) -> str:
     db = get_db()
     doc_ref = db.collection('pages').document(page_id)

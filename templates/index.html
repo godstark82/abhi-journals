@@ -118,7 +118,9 @@
                             <i class="fas fa-cube"></i>
                             <b>Chief Editor</b> <br>
                             {% if chief_editor_name %}
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{chief_editor_name }}</a>
+                            {% for chief in chief_editor_name %}
+                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ chief }}</a> <br>
+                            {% endfor %}
                             {% else %}
                                 <p>No Chief Editor found.</p>
                             {% endif %}
@@ -130,7 +132,7 @@
                             {% if associate_editors %}
                             {% for associate in associate_editors %}
                             <a href="/editorial_board.html"
-                                style="color: #033e93;text-decoration: none;">{{ associate.name }}</a> <br>
+                                style="color: #033e93;text-decoration: none;">{{ associate }}</a> <br>
                             {% endfor %}
                             {% else %}
                             <p>No Associate Editors found.</p>
@@ -142,8 +144,7 @@
                             <b>Editors</b> <br>
                             {% if editors %}
                             {% for editor in editors %}
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ editor.name
-                                }}</a> <br>
+                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ editor }}</a> <br>
                             {% endfor %}
                             {% else %}
                         <p>No Editors found.</p>
