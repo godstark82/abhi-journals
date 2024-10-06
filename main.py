@@ -1,82 +1,44 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from flask_frozen import Freezer
-import smtplib, os, json, firebase_admin, sys
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from firebase_admin import credentials, firestore
-from dotenv import load_dotenv
+from db_instance import get_db
+from models.editorial_board_model import EditorialRole
+from services import editorial_service, journal_service, mail_service, page_service
+from routes import Routes
+from paths import Paths
 
-# Load environment variables from .env file
-load_dotenv()
 
+#! DB instance
+db = get_db();
+
+
+#! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
+# app.config['SERVER_NAME'] = 'localhost:5000'
 
-# Fetch Firebase credentials from environment variable
-firebase_credentials = os.environ.get('FIREBASE_CREDENTIALS')
+#! Fetch all journals 
+all_journals = journal_service.get_all_journals()
 
 
-if not firebase_credentials:
-    raise Exception("Firebase credentials are not set in environment variables.")
-
-try:
-    # Try to remove any extra quotes that might be causing issues
-    firebase_credentials = firebase_credentials.strip("'\"")
-    cred_dict = json.loads(firebase_credentials)
-except json.JSONDecodeError as e:
-    print(f"Error decoding JSON: {e}")
-    print(f"Received value (first 50 chars): {firebase_credentials[:50]}")
-    raise
-
-# Initialize Firebase using the credentials from the environment
-cred = credentials.Certificate(cred_dict)
-firebase_admin.initialize_app(cred)
-
-db = firestore.client()
-
-@app.route("/")
+@app.route(Routes.HOME)
 def Home():
 
+    #! Fetch the content for the home page
     doc_id = "8061MAE63evqpTPdIvlz"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
+    content = page_service.get_page(doc_id)
 
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-    else:
-        content = "Document not found"
+    #! Fetch editorial board members
+    all_editorial_board_members = editorial_service.get_all_editorial_board_members()
+    editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
+    associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
+    chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
 
-    # Fetch Chief Editor
-    chief_editor_ref = db.collection('editorialBoard').where('role', '==', 'Chief Editor').limit(1)
-    chief_editor_docs = chief_editor_ref.stream()
-    
-    chief_editor_name = "Unknown"
-    for doc in chief_editor_docs:
-        chief_editor_name = doc.to_dict().get('name', 'Unknown')
-        break  # cause only need the first document
-
-    # Fetch Associate Editors
-    associate_editors_ref = db.collection('editorialBoard').where('role', '==', 'Associate Editor')
-    associate_editors = associate_editors_ref.stream()
-    
-    associate_editors_list = [{
-        'name': editor.to_dict().get('name', 'Unknown Name'),
-    } for editor in associate_editors]
+    print(all_editorial_board_members)
+    #! return the home page with the content and the editors' data
+    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list)
 
 
-    # Fetch editorial board members whose role is 'editor'
-    editorial_board_ref = db.collection('editorialBoard').where('role', '==', 'Editor')
-    editorial_board = editorial_board_ref.stream()
-
-    # Extract relevant data from the fetched documents
-    editors_list = [{
-        'name': member.to_dict().get('name', 'Unknown Name'),
-    } for member in editorial_board]
-
-    # Pass both content and editors' data to the template
-    return render_template('index.html', content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list)
-@app.route("/current_issue.html")
+@app.route(Routes.CURRENT_ISSUE)
 def currissue():
     # Fetch articles from Firestore
     articles_ref = db.collection('articles')
@@ -93,9 +55,9 @@ def currissue():
         } for article in articles
     ]
 
-    return render_template('screens/browse/current_issue.html', articles=article_data)
+    return render_template(Paths.CURRENT_ISSUE, articles=article_data)
 
-@app.route("/article_details.html")
+@app.route(Routes.ARTICLE_DETAILS)
 def article_details():
     # Fetch articles from Firestore
     articles_ref = db.collection('articles')
@@ -116,44 +78,27 @@ def article_details():
         } for article in articles
     ]
 
-    return render_template('screens/browse/article_details.html', articles=article_data)
+    return render_template(Paths.ARTICLE_DETAILS, articles=article_data)
 
-@app.route("/by_issue.html")
+@app.route(Routes.BY_ISSUE)
 def byissue():
-    return render_template('screens/browse/by_issue.html')
+    return render_template(Paths.BY_ISSUE)
 
-@app.route("/archive_2024.html")
+@app.route(Routes.ARCHIVE)
 def archive():
-    return render_template('screens/archivee/archive_2024.html')
+    return render_template(Paths.ARCHIVE)
 
-@app.route("/about_jrnl.html")
+@app.route(Routes.ABOUT_JOURNAL)
 def about_journal():
-
     doc_id = "s7zN7Ce9XCsEOP63CtUb"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
+    return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page(doc_id))
 
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-        return render_template('screens/journal_info/about_jrnl.html', content=content)
-    else:
-        return "Document not found", 404
-
-@app.route("/aimandscope.html")
+@app.route(Routes.AIM_AND_SCOPE)
 def aimnscope():
-
-    doc_id = "w45mTbOFFg54c7HSU4Ay"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
-
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-        return render_template('screens/journal_info/aimandscope.html', content=content)
-    else:
-        return "Document not found", 404
-@app.route("/editorial_board.html")
+    doc_id = "w45mTbOFFg54c7HSU4Ay"    
+    return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page(doc_id))
+    
+@app.route(Routes.EDITORIAL_BOARD)
 def editboard():
     # Fetch editorial board data from Firestore
     editorial_board_ref = db.collection('editorialBoard').stream()
@@ -172,105 +117,63 @@ def editboard():
     # Sort the members by their role based on priority
     board_members.sort(key=lambda x: role_priority.get(x['role'], 999))
     
-    return render_template('screens/journal_info/editorial_board.html', board_members=board_members)
+    return render_template(Paths.EDITORIAL_BOARD, board_members=board_members)
 
-@app.route("/publication_ethics.html")
+@app.route(Routes.PUBLICATION_ETHICS)
 def pubethics():
-
-
     doc_id = "W6bSKPFmVh6ejZMVxsWr"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
+    return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page(doc_id))
 
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-        return render_template('screens/journal_info/publication_ethics.html', content=content)
-    else:
-        return "Document not found", 404
     
-@app.route("/peerrevpro.html")
+@app.route(Routes.PEER_REVIEW_PROCESS)
 def peerpro():
 
     doc_id = "CZpNkvbYXi0Ae5RQASJp"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
+    return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page(doc_id))
     
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-        return render_template('screens/journal_info/peerrevpro.html', content=content)
-    else:
-        return "Document not found", 404
-@app.route("/indandabs.html")
+
+@app.route(Routes.INDEXING_AND_ABSTRACTING)
 def indnabs():
-    return render_template('screens/journal_info/indandabs.html')
-@app.route("/subonpaper.html")
+    return render_template(Paths.INDEXING_AND_ABSTRACTING)
+
+@app.route(Routes.SUBMIT_ONLINE_PAPER)
 def subon():
-    return render_template('screens/for_author/subonpaper.html')
-@app.route("/topics.html")
+    return render_template(Paths.SUBMIT_ONLINE_PAPER)
+
+@app.route(Routes.TOPICS)
 def topic():
-
     doc_id = "QoxjARRGKlL7BKUtcpQM"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
+    return render_template(Paths.TOPICS, content=page_service.get_page(doc_id))
 
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-        return render_template('screens/for_author/topics.html', content=content)
-    else:
-        return "Document not found", 404
-@app.route("/author_gl.html")
+@app.route(Routes.AUTHOR_GUIDELINES)
 def authgl():
 
     doc_id = "4OJKeKoJ3LStfoEU88Hu"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
+    return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page(doc_id))
 
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-        return render_template('screens/for_author/author_gl.html', content=content)
-    else:
-        return "Document not found", 404
-@app.route("/copyrightform.html")
+@app.route(Routes.COPYRIGHT_FORM)
 def crform():
-    return render_template('screens/for_author/copyrightform.html')
-@app.route("/checkpaperstats.html")
+    return render_template(Paths.COPYRIGHT_FORM)
+@app.route(Routes.CHECK_PAPER_STATUS)
 def checkpapstat():
-    return render_template('screens/for_author/checkpaperstats.html')
-@app.route("/membership.html")
+    return render_template(Paths.CHECK_PAPER_STATUS)
+@app.route(Routes.MEMBERSHIP)
 def mship():
-    return render_template('screens/for_author/membership.html')
-@app.route("/submanuscript.html")
+    return render_template(Paths.MEMBERSHIP)
+@app.route(Routes.SUBMIT_MANUSCRIPT)
 def submitmanscr():
-    return render_template('pages/submanuscript.html')
-@app.route("/reviewer.html")
+    return render_template(Paths.SUBMIT_MANUSCRIPT)
+@app.route(Routes.REVIEWER)
 def reviewer():
 
     doc_id = "GiZuANsNXJTxZdt8jQbR"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
+    return render_template(Paths.REVIEWER, content=page_service.get_page(doc_id))
 
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-        return render_template('pages/reviewer.html', content=content)
-    else:
-        return "Document not found", 404
-@app.route("/contact.html", methods=['GET', 'POST'])
+@app.route(Routes.CONTACT, methods=['GET', 'POST'])
 def ContactUs():
 
     doc_id = "ylhdV31SBbX3exH9olKj"
-    doc_ref = db.collection('pages').document(doc_id)
-    doc = doc_ref.get()
-
-    if doc.exists:
-        # Extract 'content' field from the document
-        content = doc.to_dict().get('content', '')
-    else:
-        return "Document not found", 404
+    content = page_service.get_page(doc_id)
     
     if request.method == 'POST':
         name = request.form.get("name")
@@ -281,52 +184,15 @@ def ContactUs():
         message = request.form.get("message")
 
 
-        send_email(name, email, phone, subject, questiontype, message)
+        mail_service.send_email(name, email, phone, subject, questiontype, message)
 
         flash('Your message has been successfully submitted!', 'success')
         return redirect(url_for('ContactUs'))
     
-    return render_template('contact.html', content=content)
-
-def send_email(name, email, phone, subject, questiontype, message):
-    # Gmail SMTP server setup
-    sender_email = "pachauripankaj40@gmail.com"  # Replace with your Gmail email
-    receiver_email = "pachauripankaj40@gmail.com"  # Replace with your Gmail email to receive the message
-    password = "uawa sqfi fwlr wggp"  # Replace with your Gmail password or app-specific password
-
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = receiver_email
-    msg['Subject'] = f"New Contact Form Submission: {subject}"
-
-    body = f"""
-    You have received a new message from the contact form.
-
-    Name: {name}
-    Email: {email}
-    Phone: {phone}
-    Subject: {subject}
-    Question Type: {questiontype}
-
-    Message:
-    {message}
-    """
-
-    msg.attach(MIMEText(body, 'plain'))
-
-    # Send the email via Gmail's SMTP server
-    try:
-        server = smtplib.SMTP('smtp.gmail.com', 587)
-        server.starttls()
-        server.login(sender_email, password)
-        text = msg.as_string()
-        server.sendmail(sender_email, receiver_email, text)
-        server.quit()
-    except Exception as e:
-        print(f"Failed to send email. Error: {e}")
+    return render_template(Paths.CONTACT, content=content)
 
 
-@app.route("/get_social_links")
+@app.route(Routes.GET_SOCIAL_LINKS)
 def get_social_links():
     # Fetch social links from Firestore
     social_links_ref = db.collection('socialLinks')
