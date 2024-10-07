@@ -51,20 +51,8 @@ def Home(subdomain):
 
 # Add a route for the root domain
 @app.route(Routes.HOME)
-def root_home():
-    journal_data = next((journal for journal in all_journals if journal.domain == 'main'), None)
-    currentsubdomain = 'main'
-    doc_id = "8061MAE63evqpTPdIvlz"
-    content = page_service.get_page(doc_id)
-
-    #! Fetch editorial board members
-    all_editorial_board_members = editorial_service.get_all_editorial_board_members()
-    editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
-    associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
-    chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
-    # Redirect to the main domain's HOME route when no subdomain is provided
-    # main_domain = 'godstark82.github.io'  # Replace with your actual main domain
-    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal_data, subdomain='main')
+def root_home(subdomain='main'):
+    return redirect(url_for('Home', subdomain=subdomain))
 
 
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
