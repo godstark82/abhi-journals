@@ -91,7 +91,22 @@ def article_details():
 
 @app.route(Routes.BY_ISSUE)
 def byissue():
-    return render_template(Paths.BY_ISSUE)
+    # Fetch all issues from Firestore
+    issues_ref = db.collection('issues')
+    issues = issues_ref.stream()
+    
+    # Extract only title and issueNumber from issues
+    issue_data = [
+        {
+            'title': issue.to_dict().get('title', 'Untitled Issue'),
+            'issueNumber': issue.to_dict().get('issueNumber', 'N/A')
+        } for issue in issues
+    ]
+    
+    # Sort issues by issueNumber (assuming it's stored as a number or string)
+    issue_data.sort(key=lambda x: x['issueNumber'], reverse=True)
+    
+    return render_template(Paths.BY_ISSUE, issues=issue_data)
 
 @app.route(Routes.ARCHIVE)
 def archive():
