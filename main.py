@@ -21,7 +21,7 @@ app.config['SERVER_NAME'] = 'localhost:5000'
 all_journals = journal_service.get_all_journals()
 
 
-
+currentsubdomain = 'main'
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
 def Home(subdomain):
@@ -29,7 +29,7 @@ def Home(subdomain):
 
     # Find the journal that matches the subdomain
     journal_data = next((journal for journal in all_journals if journal.domain == subdomain), None)
-
+    currentsubdomain = subdomain
     if not journal_data:
         # If no matching journal is found, you might want to handle this case
         # For example, redirect to a default page or show an error
@@ -56,7 +56,7 @@ def root_home():
     return redirect(url_for('Home', subdomain='main'))
 
 
-@app.route(Routes.CURRENT_ISSUE)
+@app.route(Routes.CURRENT_ISSUE, subdomain=currentsubdomain)
 def currissue():
     # Fetch active volumes
     active_volumes = db.collection('volumes').where('isActive', '==', True).stream()
