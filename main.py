@@ -51,9 +51,9 @@ def Home(subdomain):
 # Add a route for the root domain
 @app.route(Routes.HOME)
 def root_home():
-    # Handle the case when no subdomain is provided
-    # You might want to redirect to a default journal or show a list of available journals
-    return "Welcome to the main site. Please choose a journal."
+    # Redirect to the main domain's HOME route when no subdomain is provided
+    # main_domain = 'godstark82.github.io'  # Replace with your actual main domain
+    return redirect(url_for('Home', subdomain='main'))
 
 
 @app.route(Routes.CURRENT_ISSUE)
