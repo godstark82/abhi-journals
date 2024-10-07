@@ -41,8 +41,9 @@ jobs:
           FIREBASE_CREDENTIALS: ${{ secrets.FIREBASE_CREDENTIALS }}
         run: python freeze.py
 
-      - name: Adjust base href
-        run: sed -i 's|<base href="/">|<base href="/journal_web/">|' build/index.html
+      # - name: Adjust base href
+        # run: sed -i 's|<base href="/">|<base href="/journal_web/">|' build/index.html
+
       - name: Update SERVER_NAME in main.py
         run: sed -i "s|app.config['SERVER_NAME'] = 'localhost:5000'|app.config['SERVER_NAME'] = 'flixstar.shop'|" main.py
 
