@@ -15,14 +15,25 @@ db = get_db();
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-# app.config['SERVER_NAME'] = 'localhost:5000'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
 
 
-@app.route(Routes.HOME)
-def Home():
+currentsubdomain = 'main'
+
+@app.route(Routes.HOME, subdomain='<subdomain>')
+def Home(subdomain):
+    global journal_data
+
+    # Find the journal that matches the subdomain
+    journal_data = next((journal for journal in all_journals if journal.domain == subdomain), None)
+    currentsubdomain = subdomain
+    if not journal_data:
+        # If no matching journal is found, you might want to handle this case
+        # For example, redirect to a default page or show an error
+        return "Journal not found", 404
 
     #! Fetch the content for the home page
     doc_id = "8061MAE63evqpTPdIvlz"
@@ -33,21 +44,38 @@ def Home():
     editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
     associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
     chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
-
-
-    #! return the home page with the content and the editors' data
-    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list)
-
-
-@app.route(Routes.CURRENT_ISSUE)
-def currissue():
-    # Fetch active volumes
-    active_volumes = db.collection('volumes').where('isActive', '==', True).stream()
-    active_volume_ids = [vol.id for vol in active_volumes]
     
-     # Fetch active issue IDs based on active volumes
+    #! return the home page with the content and the editors' data
+    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal_data, subdomain=currentsubdomain)
+
+# Add a route for the root domain
+@app.route(Routes.HOME)
+def root_home():
+    # Redirect to the main domain's HOME route when no subdomain is provided
+    # main_domain = 'godstark82.github.io'  # Replace with your actual main domain
+    return redirect(url_for('Home', subdomain='main'))
+
+
+@app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
+def currissue(subdomain):
+    # Find the journal that matches the subdomain
+    journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
+    if not journal:
+        return "Journal not found", 404
+
+    # Fetch active volumes for the current journal
+    active_volumes = db.collection('volumes').where('isActive', '==', True).where('journalId', '==', journal.id).stream()
+    active_volume_ids = [vol.id for vol in active_volumes]
+
+    if not active_volume_ids:
+        return "No active volumes found", 404
+    
+    # Fetch active issue IDs based on active volumes for the current journal
     active_issues = db.collection('issues').where('isActive', '==', True).where('volumeId', 'in', active_volume_ids).stream()
     active_issue_ids = [issue.id for issue in active_issues]
+
+    if not active_issue_ids:
+        return "No active issues found", 404
 
     # Fetch articles from Firestore
     articles_ref = db.collection('articles').where('issueId', 'in', active_issue_ids)
@@ -66,11 +94,14 @@ def currissue():
 
     return render_template(Paths.CURRENT_ISSUE, articles=article_data)
 
-@app.route(Routes.ARTICLE_DETAILS)
-def article_details():
+@app.route(Routes.ARTICLE_DETAILS  + '/<article_id>', subdomain='<subdomain>')
+def article_details(subdomain, article_id):
     # Fetch articles from Firestore
-    articles_ref = db.collection('articles')
-    articles = articles_ref.stream()
+    article_ref = db.collection('articles').document(article_id)
+    article = article_ref.stream()
+
+    if not article.exists:
+        return "Article not found", 404
     
     # Extract detailed information from articles
     article_data = [
@@ -89,8 +120,8 @@ def article_details():
 
     return render_template(Paths.ARTICLE_DETAILS, articles=article_data)
 
-@app.route(Routes.BY_ISSUE)
-def byissue():
+@app.route(Routes.BY_ISSUE, subdomain='<subdomain>')
+def byissue(subdomain):
     # Fetch all issues from Firestore
     issues_ref = db.collection('issues')
     issues = issues_ref.stream()
@@ -108,8 +139,8 @@ def byissue():
     
     return render_template(Paths.BY_ISSUE, issues=issue_data)
 
-@app.route(Routes.ARCHIVE)
-def archive():
+@app.route(Routes.ARCHIVE, subdomain='<subdomain>')
+def archive(subdomain):
      # Fetch volumes from the Firestore (assuming you're using Firestore)
     volumes_ref = db.collection('volumes').where('isActive', '==', True)
     volumes = volumes_ref.stream()
@@ -123,18 +154,18 @@ def archive():
     # Pass the active volumes to the template
     return render_template(Paths.ARCHIVE, active_volumes=active_volumes)
 
-@app.route(Routes.ABOUT_JOURNAL)
-def about_journal():
+@app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
+def about_journal(subdomain):
     doc_id = "s7zN7Ce9XCsEOP63CtUb"
     return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page(doc_id))
 
-@app.route(Routes.AIM_AND_SCOPE)
-def aimnscope():
+@app.route(Routes.AIM_AND_SCOPE, subdomain='<subdomain>')
+def aimnscope(subdomain):
     doc_id = "w45mTbOFFg54c7HSU4Ay"    
     return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page(doc_id))
     
-@app.route(Routes.EDITORIAL_BOARD)
-def editboard():
+@app.route(Routes.EDITORIAL_BOARD, subdomain='<subdomain>')
+def editboard(subdomain):
     # Fetch editorial board data from Firestore
     editorial_board_ref = db.collection('editorialBoard').stream()
     
@@ -154,58 +185,58 @@ def editboard():
     
     return render_template(Paths.EDITORIAL_BOARD, board_members=board_members)
 
-@app.route(Routes.PUBLICATION_ETHICS)
-def pubethics():
+@app.route(Routes.PUBLICATION_ETHICS, subdomain='<subdomain>')
+def pubethics(subdomain):
     doc_id = "W6bSKPFmVh6ejZMVxsWr"
     return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page(doc_id))
 
     
-@app.route(Routes.PEER_REVIEW_PROCESS)
-def peerpro():
+@app.route(Routes.PEER_REVIEW_PROCESS, subdomain='<subdomain>')
+def peerpro(subdomain):
 
     doc_id = "CZpNkvbYXi0Ae5RQASJp"
     return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page(doc_id))
     
 
-@app.route(Routes.INDEXING_AND_ABSTRACTING)
-def indnabs():
+@app.route(Routes.INDEXING_AND_ABSTRACTING, subdomain='<subdomain>')
+def indnabs(subdomain):
     return render_template(Paths.INDEXING_AND_ABSTRACTING)
 
-@app.route(Routes.SUBMIT_ONLINE_PAPER)
-def subon():
+@app.route(Routes.SUBMIT_ONLINE_PAPER, subdomain='<subdomain>')
+def subon(subdomain):
     return render_template(Paths.SUBMIT_ONLINE_PAPER)
 
-@app.route(Routes.TOPICS)
-def topic():
+@app.route(Routes.TOPICS, subdomain='<subdomain>')
+def topic(subdomain):
     doc_id = "QoxjARRGKlL7BKUtcpQM"
     return render_template(Paths.TOPICS, content=page_service.get_page(doc_id))
 
-@app.route(Routes.AUTHOR_GUIDELINES)
-def authgl():
+@app.route(Routes.AUTHOR_GUIDELINES, subdomain='<subdomain>')
+def authgl(subdomain):
 
     doc_id = "4OJKeKoJ3LStfoEU88Hu"
     return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page(doc_id))
 
-@app.route(Routes.COPYRIGHT_FORM)
-def crform():
+@app.route(Routes.COPYRIGHT_FORM, subdomain='<subdomain>')
+def crform(subdomain):
     return render_template(Paths.COPYRIGHT_FORM)
-@app.route(Routes.CHECK_PAPER_STATUS)
-def checkpapstat():
+@app.route(Routes.CHECK_PAPER_STATUS, subdomain='<subdomain>')
+def checkpapstat(subdomain):
     return render_template(Paths.CHECK_PAPER_STATUS)
-@app.route(Routes.MEMBERSHIP)
-def mship():
+@app.route(Routes.MEMBERSHIP, subdomain='<subdomain>')
+def mship(subdomain):
     return render_template(Paths.MEMBERSHIP)
-@app.route(Routes.SUBMIT_MANUSCRIPT)
-def submitmanscr():
+@app.route(Routes.SUBMIT_MANUSCRIPT, subdomain='<subdomain>')
+def submitmanscr(subdomain):
     return render_template(Paths.SUBMIT_MANUSCRIPT)
-@app.route(Routes.REVIEWER)
-def reviewer():
+@app.route(Routes.REVIEWER, subdomain='<subdomain>')
+def reviewer(subdomain):
 
     doc_id = "GiZuANsNXJTxZdt8jQbR"
     return render_template(Paths.REVIEWER, content=page_service.get_page(doc_id))
 
-@app.route(Routes.CONTACT, methods=['GET', 'POST'])
-def ContactUs():
+@app.route(Routes.CONTACT, subdomain='<subdomain>', methods=['GET', 'POST'])
+def ContactUs(subdomain):    
 
     doc_id = "ylhdV31SBbX3exH9olKj"
     content = page_service.get_page(doc_id)
@@ -227,8 +258,8 @@ def ContactUs():
     return render_template(Paths.CONTACT, content=content)
 
 
-@app.route(Routes.GET_SOCIAL_LINKS)
-def get_social_links():
+@app.route(Routes.GET_SOCIAL_LINKS, subdomain='<subdomain>')
+def get_social_links(subdomain):
     return social_link_service.get_social_links()
 
 
@@ -240,4 +271,3 @@ if __name__ == "__main__":
 
     # Uncomment this to generate the static files
     freezer.freeze()
-    
