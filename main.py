@@ -51,8 +51,8 @@ def Home(subdomain):
 
 # Add a route for the root domain
 @app.route(Routes.HOME)
-def root_home(subdomain='main'):
-    return redirect(url_for('Home', subdomain=subdomain))
+def root_home():
+    return redirect(url_for('Home', subdomain='main'))
 
 
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
