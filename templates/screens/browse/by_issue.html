@@ -1,22 +1,70 @@
 {% extends "layout.html" %}
 {% block body %}
+
 <head>
     <style>
-        section {
+        .issues-container {
             margin: 20px;
             padding: 20px;
-            color: black;
+            color: #333;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .issue {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .issue:last-child {
+            border-bottom: none;
+        }
+
+        .issue-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .issue-status {
+            font-size: 0.9em;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+
+        .active {
+            color: #2ecc71;
+        }
+
+        .inactive {
+            color: #e74c3c;
+        }
+
+        .no-issues {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
         }
     </style>
-<title>By Issue</title>
+    <title>By Issue</title>
 </head>
 
-<section>
-    {% for issue in issues %}
-    <p>Issue: {{ issue.issueNumber }} - {{ issue.title }}</p>
-    {% endfor %}
+<section class="issues-container">
+    {% if issues %}
+        {% for issue in issues %}
+        <div class="issue">
+            <div class="issue-title">
+                Issue {{ issue.issueNumber }}: {{ issue.title }}
+                {% if not issue.isActive %}
+                    <span class="issue-status inactive">(Inactive)</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="no-issues">{{ error_message or "No issues found." }}</p>
+    {% endif %}
 </section>
 
-{% endblock %} 
+{% endblock %}

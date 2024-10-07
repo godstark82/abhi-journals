@@ -10,16 +10,18 @@
             margin-bottom: 20px;
         }
     </style>
-<title>Archive 2024</title>
+<title>Archive {% if journal %}{{ journal.name }}{% endif %}</title>
 </head>
 <body>
-    
-         <section>
-             {% for volumeNumber, title in active_volumes %}
-                 <p><a href="/current_issue.html" style="color: black; text-decoration: none;">Volume {{ volumeNumber }}: {{ title }}</a></p> <hr>
-             {% endfor %}
-         </section>
-    
+    <section>
+        {% if active_volumes %}
+            {% for volume in active_volumes %}
+                <p>Volume- {{ volume.volumeNumber }}: {{ volume.title }}</p>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p style="text-align: center;">No active volumes found for this journal.</p>
+        {% endif %}
+    </section>
 </body>
-
-{% endblock %} 
+{% endblock %}
