@@ -94,14 +94,11 @@ def currissue(subdomain):
 
     return render_template(Paths.CURRENT_ISSUE, articles=article_data)
 
-@app.route(Routes.ARTICLE_DETAILS  + '/<article_id>', subdomain='<subdomain>')
-def article_details(subdomain, article_id):
+@app.route(Routes.ARTICLE_DETAILS, subdomain='<subdomain>')
+def article_details(subdomain):
     # Fetch articles from Firestore
-    article_ref = db.collection('articles').document(article_id)
-    article = article_ref.stream()
-
-    if not article.exists:
-        return "Article not found", 404
+    articles_ref = db.collection('articles')
+    articles = articles_ref.stream()
     
     # Extract detailed information from articles
     article_data = [
@@ -139,8 +136,8 @@ def byissue(subdomain):
     
     return render_template(Paths.BY_ISSUE, issues=issue_data)
 
-@app.route(Routes.ARCHIVE, subdomain='<subdomain>')
-def archive(subdomain):
+@app.route(Routes.ARCHIVE, )
+def archive():
      # Fetch volumes from the Firestore (assuming you're using Firestore)
     volumes_ref = db.collection('volumes').where('isActive', '==', True)
     volumes = volumes_ref.stream()
