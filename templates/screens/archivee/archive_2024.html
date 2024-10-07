@@ -9,15 +9,67 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+        .volumes-container {
+            margin: 20px;
+            padding: 20px;
+            color: #333;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .volume {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .volume:last-child {
+            border-bottom: none;
+        }
+
+        .volume-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .volume-status {
+            font-size: 0.9em;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 5px;
+        }
+
+        .active {
+            color: #2ecc71;
+        }
+
+        .inactive {
+            color: #e74c3c;
+        }
+
+        .no-volumes {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+        }
     </style>
 <title>Archive {% if journal %}{{ journal.name }}{% endif %}</title>
 </head>
 <body>
-    <section>
+    <section class="volumes-container">
         {% if active_volumes %}
             {% for volume in active_volumes %}
-                <p>Volume- {{ volume.volumeNumber }}: {{ volume.title }}</p>
+            <div class="volume">
+                <div class="volume-title">
+                    Volume- {{ volume.volumeNumber }}: {{ volume.title }}
+                    {% if not volume.isActive %}
+                        <span class="volume-status inactive">(Inactive)</span>
+                    {% else %}
+                        <span class="volume-status active">(Active)</span>
+                    {% endif %}
+                </div>
                 <hr>
+            </div>
             {% endfor %}
         {% else %}
             <p style="text-align: center;">{{ error_message or "No active volumes found for this journal." }}</p>

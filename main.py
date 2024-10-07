@@ -148,7 +148,7 @@ def byissue(subdomain):
                 'issueNumber': issue.to_dict().get('issueNumber', 'N/A'),
                 'isActive': issue.to_dict().get('isActive', False)
             } for issue in issues
-        ]
+        ]   
         
         # Sort issues by issueNumber in descending order
         issue_data.sort(key=lambda x: x['issueNumber'], reverse=True)
@@ -174,7 +174,9 @@ def archive(subdomain):
     active_volumes = [
         {
             'volumeNumber': volume.to_dict().get('volumeNumber', 'N/A'),
-            'title': volume.to_dict().get('title', 'Untitled')
+            'title': volume.to_dict().get('title', 'Untitled'),
+            'createdAt': volume.to_dict().get('createdAt', 'Unknown Date'),
+            'isActive': volume.to_dict().get('isActive', False)
         }
         for volume in volumes
     ]
