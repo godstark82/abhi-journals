@@ -20,7 +20,7 @@
                 <hr>
             {% endfor %}
         {% else %}
-            <p style="text-align: center;">No active volumes found for this journal.</p>
+            <p style="text-align: center;">{{ error_message or "No active volumes found for this journal." }}</p>
         {% endif %}
     </section>
 </body>

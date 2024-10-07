@@ -125,7 +125,7 @@ def byissue(subdomain):
     # Find the journal that matches the subdomain
     journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
     if not journal:
-        return "Journal not found", 404
+        return render_template(Paths.BY_ISSUE, issues=[], error_message="Journal not found.")
 
     # Fetch all volumes for the current journal
     volumes_ref = db.collection('volumes').where('journalId', '==', journal.id)
@@ -164,7 +164,7 @@ def archive(subdomain):
     # Find the journal that matches the subdomain
     journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
     if not journal:
-        return "Journal not found", 404
+         return render_template(Paths.ARCHIVE, active_volumes=[], journal=None, error_message="Journal not found.")
     
     # Fetch volumes for the current journal
     volumes_ref = db.collection('volumes').where('isActive', '==', True).where('journalId', '==', journal.id)
@@ -181,8 +181,13 @@ def archive(subdomain):
      # Sort volumes by volumeNumber in descending order
     active_volumes.sort(key=lambda x: x['volumeNumber'], reverse=True)
 
+    if not active_volumes:
+        error_message = "No active volumes found for this journal."
+    else:
+        error_message = None
+
     # Pass the active volumes to the template
-    return render_template(Paths.ARCHIVE, active_volumes=active_volumes, journal=journal)
+    return render_template(Paths.ARCHIVE, active_volumes=active_volumes, journal=journal,error_message=error_message)
 
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
 def about_journal(subdomain):

@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
-{% block body %}
 
+{% block body %}
 <head>
     <style>
         .issues-container {
@@ -47,7 +47,7 @@
             font-style: italic;
         }
     </style>
-    <title>By Issue</title>
+    <title>Issues for Journal</title>
 </head>
 
 <section class="issues-container">
@@ -58,6 +58,8 @@
                 Issue {{ issue.issueNumber }}: {{ issue.title }}
                 {% if not issue.isActive %}
                     <span class="issue-status inactive">(Inactive)</span>
+                {% else %}
+                    <span class="issue-status active">(Active)</span>
                 {% endif %}
             </div>
         </div>
