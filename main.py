@@ -15,14 +15,25 @@ db = get_db();
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-# app.config['SERVER_NAME'] = 'localhost:5000'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
 
 
-@app.route(Routes.HOME)
-def Home():
+
+
+@app.route(Routes.HOME, subdomain='<subdomain>')
+def Home(subdomain):
+    global journal_data
+
+    # Find the journal that matches the subdomain
+    journal_data = next((journal for journal in all_journals if journal.domain == subdomain), None)
+
+    if not journal_data:
+        # If no matching journal is found, you might want to handle this case
+        # For example, redirect to a default page or show an error
+        return "Journal not found", 404
 
     #! Fetch the content for the home page
     doc_id = "8061MAE63evqpTPdIvlz"
@@ -33,10 +44,16 @@ def Home():
     editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
     associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
     chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
-
-
+    
     #! return the home page with the content and the editors' data
-    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list)
+    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal_data)
+
+# Add a route for the root domain
+@app.route(Routes.HOME)
+def root_home():
+    # Handle the case when no subdomain is provided
+    # You might want to redirect to a default journal or show a list of available journals
+    return "Welcome to the main site. Please choose a journal."
 
 
 @app.route(Routes.CURRENT_ISSUE)
