@@ -16,8 +16,8 @@ db = get_db();
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-app.config['SERVER_NAME'] = 'abhijournals.com'
-# app.config['SERVER_NAME'] = 'localhost:5000'
+# app.config['SERVER_NAME'] = 'abhijournals.com'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
@@ -148,7 +148,7 @@ def byissue(subdomain):
         return render_template(Paths.BY_ISSUE, issues=[], error_message="No issues found for this journal.")
 
 @app.route(Routes.ARCHIVE, subdomain='<subdomain>')
-def archive(subdomain):
+def archive(subdomain): 
     # Find the journal that matches the subdomain
     journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
     if not journal:
@@ -193,6 +193,32 @@ def archive(subdomain):
 
     # Pass all volumes to the template
     return render_template(Paths.ARCHIVE, volumes=all_volumes, journal=journal, error_message=error_message)
+
+# New route to handle issues for a specific volume
+@app.route('/volume/<volume_id>/issues')
+def volume_issues(volume_id):
+    # Fetch the issues for the volume that contain articles
+    issues_ref = db.collection('issues').where('volumeId', '==', volume_id)
+    issues = issues_ref.stream()
+
+    filtered_issues = []
+    for issue in issues:
+        # Check if the issue has articles
+        articles_ref = db.collection('articles').where('issueId', '==', issue.id).limit(1)
+        if len(list(articles_ref.stream())) > 0:
+            issue_data = issue.to_dict()
+            filtered_issues.append({
+                'id': issue.id,
+                'issueNumber': issue_data.get('issueNumber', 'N/A'),
+                'title': issue_data.get('title', 'Untitled'),
+                'createdAt': issue_data.get('createdAt', 'Unknown Date'),
+            })
+
+    if not filtered_issues:
+        return render_template(Paths.VOLUME_ISSUES, issues=[], error_message="No issues with articles found for this volume.")
+    return volume_id
+    # return render_template(Paths.VOLUME_ISSUES, issues=filtered_issues)
+
 
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
 def about_journal(subdomain):

@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block body %}
+<head>
+    <title>Volume Issues</title>
+</head>
+<body>
+    <section class="issues-container">
+        {% if issues %}
+            {% for issue in issues %}
+                <div class="issue">
+                    <h3>Issue-{{ issue.issueNumber }}: {{ issue.title }}</h3>
+                    <p>Published on: {{ issue.createdAt }}</p>
+                    <hr>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="no-issues">{{ error_message or "No issues found for this volume." }}</p>
+        {% endif %}
+    </section>
+</body>
+{% endblock %}

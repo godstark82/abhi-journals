@@ -4,6 +4,7 @@ class Routes:
     # ARTICLE_DETAILS = "/article_details/<article_id>"
     BY_ISSUE = "/by_issue.html"
     ARCHIVE = "/archive_2024.html"
+    VOLUME_ISSUES = "/issues.html"
     ABOUT_JOURNAL = "/about_jrnl.html"
     AIM_AND_SCOPE = "/aimandscope.html"
     EDITORIAL_BOARD = "/editorial_board.html"

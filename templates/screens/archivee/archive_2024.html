@@ -63,7 +63,8 @@
             {% for volume in volumes %}
                 <div class="volume">
                     <div class="volume-title">
-                        Volume-{{ volume.volumeNumber }}: {{ volume.title }}
+                        <a href="{{ url_for('volume_issues', volume_id=volume['id']) }}" style="color: black; text-decoration: none;">
+                        Volume-{{ volume.volumeNumber }}: {{ volume.id }}
                         {% if not volume.isActive %}
                             <span class="volume-status inactive">(Inactive)</span>
                             <div class="volume-created-at" style="font-weight: normal;">
@@ -75,7 +76,8 @@
                                 <i class="far fa-clock"></i> {{ volume.createdAt }}
                             </div>
                         {% endif %}
-                    </div>
+                        </a>
+                    </div>  
                     <hr>
                 </div>
             {% endfor %}

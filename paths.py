@@ -4,6 +4,7 @@ class Paths:
     # ARTICLE_DETAILS = 'screens/browse/article_details.html'
     BY_ISSUE = 'screens/browse/by_issue.html'
     ARCHIVE = 'screens/archivee/archive_2024.html'
+    VOLUME_ISSUES = 'screens/archivee/issues.html'
     ABOUT_JOURNAL = 'screens/journal_info/about_jrnl.html'
     AIM_AND_SCOPE = 'screens/journal_info/aimandscope.html'
     EDITORIAL_BOARD = 'screens/journal_info/editorial_board.html'
