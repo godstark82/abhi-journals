@@ -303,14 +303,14 @@ def get_social_links(subdomain):
 
 freezer = Freezer(app)
 
-# mode = "prod"
+mode = "dev"
 
 if __name__ == "__main__":
     # Comment this out when freezing
-    # if mode == "dev":
+    if mode == "dev":
         app.run(host='0.0.0.0', port=5000, debug=True)
-    # else:
-    #     serve(app, host='0.0.0.0', port=5000, threads=4)
+    else:
+        serve(app, host='0.0.0.0', port=5000, threads=4)
 
     # Uncomment this to generate the static files
     # freezer.freeze()

@@ -3,3 +3,4 @@ Frozen-Flask==0.18
 Werkzeug==2.2.2
 firebase-admin==6.5.0
 python-dotenv==1.0.1
+waitress==3.0.0
