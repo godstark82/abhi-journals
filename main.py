@@ -1,6 +1,7 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from db_instance import get_db
 from models.editorial_board_model import EditorialRole
+from models.journal_model import JournalModel
 from services import editorial_service, journal_service, mail_service, page_service, social_link_service
 from routes import Routes
 from paths import Paths
@@ -16,14 +17,15 @@ db = get_db();
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-# app.config['SERVER_NAME'] = 'abhijournals.com'
-app.config['SERVER_NAME'] = 'localhost:5000'
+app.config['SERVER_NAME'] = 'abhijournals.com'
+# app.config['SERVER_NAME'] = 'localhost:5000'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
+journal: JournalModel = None
 
 
-currentsubdomain = 'main'
+
 
 # Add a route for the root domain
 @app.route(Routes.HOME)
@@ -33,10 +35,14 @@ def root_home():
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
 def Home(subdomain):
-    global journal_data
-    journal_data = next((journal for journal in all_journals if journal.domain == subdomain), None)
+    for journalItem in all_journals:
+        if journalItem.domain == subdomain:
+            journal = journalItem
+            break
+
+    journal = journal_service.get_journal(journal.id)
     currentsubdomain = subdomain
-    if not journal_data:
+    if not journal:
         return "Journal not found", 404
 
     #! Fetch the content for the home page
@@ -50,7 +56,7 @@ def Home(subdomain):
     chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
     
     #! return the home page with the content and the editors' data
-    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal_data, subdomain=currentsubdomain)
+    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal, subdomain=currentsubdomain)
 
 
 
@@ -149,54 +155,27 @@ def byissue(subdomain):
 
 @app.route(Routes.ARCHIVE, subdomain='<subdomain>')
 def archive(subdomain): 
+    # journal_data = []
     # Find the journal that matches the subdomain
-    journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
-    if not journal:
-         return render_template(Paths.ARCHIVE, volumes=[], journal=None, error_message="Journal not found.")
-    
-    # Fetch all volumes for the current journal
-    volumes_ref = db.collection('volumes').where('journalId', '==', journal.id)
-    volumes = volumes_ref.stream()
+    for journalItem in all_journals:
+        if journalItem.domain == subdomain:
+            journal = journalItem
+            break
 
-    all_volumes = []
-    for volume in volumes:
-        volume_data = volume.to_dict()
-        volume_id = volume.id
+    journal = journal_service.get_journal(journal.id)
+    journal.volumes.sort(key=lambda x: x.volume_number, reverse=True)
 
-        # Fetch issues for this volume
-        issues_ref = db.collection('issues').where('volumeId', '==', volume_id)
-        issues = issues_ref.stream()
-
-        has_articles = False
-        for issue in issues:
-            # Check if the issue has any articles
-            articles_ref = db.collection('articles').where('issueId', '==', issue.id).limit(1)
-            if len(list(articles_ref.stream())) > 0:
-                has_articles = True
-                break
-
-        if has_articles:
-            all_volumes.append({
-                'volumeNumber': volume_data.get('volumeNumber', 'N/A'),
-                'title': volume_data.get('title', 'Untitled'),
-                'createdAt': volume_data.get('createdAt', 'Unknown Date'),
-                'isActive': volume_data.get('isActive', False)
-            })
-
-    # Sort volumes by volumeNumber in descending order
-    all_volumes.sort(key=lambda x: x['volumeNumber'], reverse=True)
-
-    if not all_volumes:
+    if not journal.volumes:
         error_message = "No volumes with articles found for this journal."
     else:
         error_message = None
 
     # Pass all volumes to the template
-    return render_template(Paths.ARCHIVE, volumes=all_volumes, journal=journal, error_message=error_message)
+    return render_template(Paths.ARCHIVE, journal=journal, error_message=error_message)
 
 # New route to handle issues for a specific volume
-@app.route('/volume/<volume_id>/issues')
-def volume_issues(volume_id):
+@app.route('/volume/<volume_id>/issues', subdomain='<subdomain>')
+def volume_issues(subdomain, volume_id):
     # Fetch the issues for the volume that contain articles
     issues_ref = db.collection('issues').where('volumeId', '==', volume_id)
     issues = issues_ref.stream()
@@ -216,8 +195,8 @@ def volume_issues(volume_id):
 
     if not filtered_issues:
         return render_template(Paths.VOLUME_ISSUES, issues=[], error_message="No issues with articles found for this volume.")
-    return volume_id
-    # return render_template(Paths.VOLUME_ISSUES, issues=filtered_issues)
+    # return volume_id
+    return render_template(Paths.VOLUME_ISSUES, issues=filtered_issues)
 
 
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')

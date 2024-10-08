@@ -59,11 +59,11 @@
 
 <body>
     <section class="volumes-container">
-        {% if volumes %}
-            {% for volume in volumes %}
+        {% if journal.volumes %}
+            {% for volume in journal.volumes %}
                 <div class="volume">
                     <div class="volume-title">
-                        <a href="{{ url_for('volume_issues', volume_id=volume['id']) }}" style="color: black; text-decoration: none;">
+                        <a href="{{ url_for('volume_issues', volume_id=volume.id, subdomain=journal.domain) }}" style="color: black; text-decoration: none;">
                         Volume-{{ volume.volumeNumber }}: {{ volume.id }}
                         {% if not volume.isActive %}
                             <span class="volume-status inactive">(Inactive)</span>
