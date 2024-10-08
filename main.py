@@ -50,9 +50,9 @@ def Home(subdomain):
     return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal_data, subdomain=currentsubdomain)
 
 # Add a route for the root domain
-@app.route(Routes.HOME)
-def root_home():
-    return redirect(url_for('Home', subdomain='main'))
+# @app.route(Routes.HOME)
+# def root_home():
+#     return redirect(url_for('Home', subdomain='main'))
 
 
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
