@@ -17,7 +17,7 @@ db = get_db();
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-app.config['SERVER_NAME'] = 'localhost:5000'
+app.config['SERVER_NAME'] = 'abhijournals.com'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
@@ -51,9 +51,9 @@ def Home(subdomain):
     return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal_data, subdomain=currentsubdomain)
 
 # Add a route for the root domain
-@app.route(Routes.HOME)
-def root_home():
-    return redirect(url_for('Home', subdomain='main'))
+# @app.route(Routes.HOME)
+# def root_home():
+#     return redirect(url_for('Home', subdomain='main'))
 
 
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
@@ -313,4 +313,4 @@ if __name__ == "__main__":
         serve(app, host='0.0.0.0', port=5000, threads=4)
 
     # Uncomment this to generate the static files
-    freezer.freeze()
+    # freezer.freeze()
