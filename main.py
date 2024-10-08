@@ -1,5 +1,4 @@
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
-from flask_frozen import Freezer
 from db_instance import get_db
 from models.editorial_board_model import EditorialRole
 from services import editorial_service, journal_service, mail_service, page_service, social_link_service
@@ -34,13 +33,9 @@ def root_home():
 @app.route(Routes.HOME, subdomain='<subdomain>')
 def Home(subdomain):
     global journal_data
-
-    # Find the journal that matches the subdomain
     journal_data = next((journal for journal in all_journals if journal.domain == subdomain), None)
     currentsubdomain = subdomain
     if not journal_data:
-        # If no matching journal is found, you might want to handle this case
-        # For example, redirect to a default page or show an error
         return "Journal not found", 404
 
     #! Fetch the content for the home page
@@ -303,7 +298,7 @@ def get_social_links(subdomain):
     return social_link_service.get_social_links()
 
 
-freezer = Freezer(app)
+
 
 mode = "dev"
 
@@ -313,6 +308,3 @@ if __name__ == "__main__":
         app.run(host='0.0.0.0', port=5000, debug=True)
     else:
         serve(app, host='0.0.0.0', port=5000, threads=4)
-
-    # Uncomment this to generate the static files
-    # freezer.freeze()
