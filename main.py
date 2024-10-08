@@ -28,29 +28,7 @@ currentsubdomain = 'main'
 # Add a route for the root domain
 @app.route(Routes.HOME)
 def root_home():
-    global journal_data
-    subdomain = 'main'
-
-    # Find the journal that matches the subdomain
-    journal_data = next((journal for journal in all_journals if journal.domain == subdomain), None)
-    currentsubdomain = subdomain
-    if not journal_data:
-        # If no matching journal is found, you might want to handle this case
-        # For example, redirect to a default page or show an error
-        return "Journal not found", 404
-
-    #! Fetch the content for the home page
-    doc_id = "8061MAE63evqpTPdIvlz"
-    content = page_service.get_page(doc_id)
-
-    #! Fetch editorial board members
-    all_editorial_board_members = editorial_service.get_all_editorial_board_members()
-    editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
-    associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
-    chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
-    
-    #! return the home page with the content and the editors' data
-    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal_data, subdomain=currentsubdomain)
+    return redirect(url_for('Home', subdomain='main'))
 
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
