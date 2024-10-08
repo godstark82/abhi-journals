@@ -16,7 +16,7 @@ db = get_db();
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-app.config['SERVER_NAME'] = 'localhost:5000'
+app.config['SERVER_NAME'] = 'abhijournals.com'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
