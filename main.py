@@ -17,6 +17,7 @@ db = get_db();
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
 app.config['SERVER_NAME'] = 'abhijournals.com'
+# app.config['SERVER_NAME'] = 'localhost:5000'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
@@ -85,8 +86,13 @@ def currissue(subdomain):
     article_data = [
         {
             'title': article.to_dict().get('title', 'No Title'),
+            'documentType': article.to_dict().get('documentType', 'Unknown Type'),
             'authors': ', '.join([author.get('name', 'Unknown') for author in article.to_dict().get('authors', [])]),
             'createdAt': article.to_dict().get('createdAt', 'Unknown Date'),
+            'abstractString': article.to_dict().get('abstractString', 'No abstract available'),
+            'keywords': article.to_dict().get('keywords', []),
+            'mainSubjects': article.to_dict().get('mainSubjects', []),
+            'references': article.to_dict().get('references', []),
             'image': article.to_dict().get('image', None),
             'pdf': article.to_dict().get('pdf', None)
         } for article in articles
@@ -94,28 +100,6 @@ def currissue(subdomain):
 
     return render_template(Paths.CURRENT_ISSUE, articles=article_data, error_message=None)
 
-@app.route(Routes.ARTICLE_DETAILS, subdomain='<subdomain>')
-def article_details(subdomain):
-    # Fetch articles from Firestore
-    articles_ref = db.collection('articles')
-    articles = articles_ref.stream()
-    
-    # Extract detailed information from articles
-    article_data = [
-        {
-            'title': article.to_dict().get('title', 'No Title'),
-            'documentType': article.to_dict().get('documentType', 'Unknown Type'),
-            'authors': ', '.join([author.get('name', 'Unknown') for author in article.to_dict().get('authors', [])]),
-            'pdf': article.to_dict().get('pdf', None),
-            'abstractString': article.to_dict().get('abstractString', 'No abstract available'),
-            'keywords': article.to_dict().get('keywords', []),
-            'mainSubjects': article.to_dict().get('mainSubjects', []),
-            'references': article.to_dict().get('references', []),
-            'image': article.to_dict().get('image', None),
-        } for article in articles
-    ]
-
-    return render_template(Paths.ARTICLE_DETAILS, articles=article_data)
 
 
 @app.route(Routes.BY_ISSUE, subdomain='<subdomain>')
@@ -139,19 +123,25 @@ def byissue(subdomain):
         issues_ref = db.collection('issues').where('volumeId', 'in', volume_ids)
         issues = issues_ref.stream()
         
-        # Extract title, issueNumber, and isActive from issues
-        issue_data = [
-            {
-                'title': issue.to_dict().get('title', 'Untitled Issue'),
-                'issueNumber': issue.to_dict().get('issueNumber', 'N/A'),
-                'isActive': issue.to_dict().get('isActive', False)
-            } for issue in issues
-        ]   
+        all_issues = []
+        for issue in issues:
+            issue_data = issue.to_dict()
+            # Fetch articles for this issue
+            articles_ref = db.collection('articles').where('issueId', '==', issue.id).limit(1)
+            articles = articles_ref.stream()
+            
+            # Only add the issue if it has at least one article
+            if next(articles, None):
+                all_issues.append({
+                    'title': issue_data.get('title', 'Untitled Issue'),
+                    'issueNumber': issue_data.get('issueNumber', 'N/A'),
+                    'isActive': issue_data.get('isActive', False)
+                })
         
         # Sort issues by issueNumber in descending order
-        issue_data.sort(key=lambda x: x['issueNumber'], reverse=True)
+        all_issues.sort(key=lambda x: x['issueNumber'], reverse=True)
         
-        return render_template(Paths.BY_ISSUE, issues=issue_data, error_message=None)
+        return render_template(Paths.BY_ISSUE, issues=all_issues, error_message=None)
     
     except InvalidArgument:
         # Handle the case where there are no issues
@@ -162,32 +152,47 @@ def archive(subdomain):
     # Find the journal that matches the subdomain
     journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
     if not journal:
-         return render_template(Paths.ARCHIVE, active_volumes=[], journal=None, error_message="Journal not found.")
+         return render_template(Paths.ARCHIVE, volumes=[], journal=None, error_message="Journal not found.")
     
-    # Fetch volumes for the current journal
-    volumes_ref = db.collection('volumes').where('isActive', '==', True).where('journalId', '==', journal.id)
+    # Fetch all volumes for the current journal
+    volumes_ref = db.collection('volumes').where('journalId', '==', journal.id)
     volumes = volumes_ref.stream()
 
-    # Collect the volume data
-    active_volumes = [
-        {
-            'volumeNumber': volume.to_dict().get('volumeNumber', 'N/A'),
-            'title': volume.to_dict().get('title', 'Untitled'),
-            'createdAt': volume.to_dict().get('createdAt', 'Unknown Date'),
-            'isActive': volume.to_dict().get('isActive', False)
-        }
-        for volume in volumes
-    ]
-     # Sort volumes by volumeNumber in descending order
-    active_volumes.sort(key=lambda x: x['volumeNumber'], reverse=True)
+    all_volumes = []
+    for volume in volumes:
+        volume_data = volume.to_dict()
+        volume_id = volume.id
 
-    if not active_volumes:
-        error_message = "No active volumes found for this journal."
+        # Fetch issues for this volume
+        issues_ref = db.collection('issues').where('volumeId', '==', volume_id)
+        issues = issues_ref.stream()
+
+        has_articles = False
+        for issue in issues:
+            # Check if the issue has any articles
+            articles_ref = db.collection('articles').where('issueId', '==', issue.id).limit(1)
+            if len(list(articles_ref.stream())) > 0:
+                has_articles = True
+                break
+
+        if has_articles:
+            all_volumes.append({
+                'volumeNumber': volume_data.get('volumeNumber', 'N/A'),
+                'title': volume_data.get('title', 'Untitled'),
+                'createdAt': volume_data.get('createdAt', 'Unknown Date'),
+                'isActive': volume_data.get('isActive', False)
+            })
+
+    # Sort volumes by volumeNumber in descending order
+    all_volumes.sort(key=lambda x: x['volumeNumber'], reverse=True)
+
+    if not all_volumes:
+        error_message = "No volumes with articles found for this journal."
     else:
         error_message = None
 
-    # Pass the active volumes to the template
-    return render_template(Paths.ARCHIVE, active_volumes=active_volumes, journal=journal,error_message=error_message)
+    # Pass all volumes to the template
+    return render_template(Paths.ARCHIVE, volumes=all_volumes, journal=journal, error_message=error_message)
 
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
 def about_journal(subdomain):

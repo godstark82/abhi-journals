@@ -47,7 +47,7 @@
             font-style: italic;
         }
     </style>
-    <title>Issues for Journal</title>
+    <title>By Issue</title>
 </head>
 
 <section class="issues-container">
@@ -65,7 +65,7 @@
         </div>
         {% endfor %}
     {% else %}
-        <p class="no-issues">{{ error_message or "No issues found." }}</p>
+        <p class="no-issues">{{ error_message or "No issues with articles found." }}</p>
     {% endif %}
 </section>
 

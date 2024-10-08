@@ -9,6 +9,7 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
         }
+
         .volumes-container {
             margin: 20px;
             padding: 20px;
@@ -53,26 +54,33 @@
             font-style: italic;
         }
     </style>
-<title>Archive {% if journal %}{{ journal.name }}{% endif %}</title>
+    <title>Archive {% if journal %}{{ journal.name }}{% endif %}</title>
 </head>
+
 <body>
     <section class="volumes-container">
-        {% if active_volumes %}
-            {% for volume in active_volumes %}
-            <div class="volume">
-                <div class="volume-title">
-                    Volume- {{ volume.volumeNumber }}: {{ volume.title }}
-                    {% if not volume.isActive %}
-                        <span class="volume-status inactive">(Inactive)</span>
-                    {% else %}
-                        <span class="volume-status active">(Active)</span>
-                    {% endif %}
+        {% if volumes %}
+            {% for volume in volumes %}
+                <div class="volume">
+                    <div class="volume-title">
+                        Volume-{{ volume.volumeNumber }}: {{ volume.title }}
+                        {% if not volume.isActive %}
+                            <span class="volume-status inactive">(Inactive)</span>
+                            <div class="volume-created-at" style="font-weight: normal;">
+                                <i class="far fa-clock"></i> {{ volume.createdAt }}
+                            </div>
+                        {% else %}
+                            <span class="volume-status active">(Active)</span>
+                            <div class="volume-created-at" style="font-weight: normal;">
+                                <i class="far fa-clock"></i> {{ volume.createdAt }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <hr>
                 </div>
-                <hr>
-            </div>
             {% endfor %}
         {% else %}
-            <p style="text-align: center;">{{ error_message or "No active volumes found for this journal." }}</p>
+            <p class="no-volumes">{{ error_message or "No volumes found for this journal." }}</p>
         {% endif %}
     </section>
 </body>
