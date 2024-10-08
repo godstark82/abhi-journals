@@ -5,6 +5,7 @@ from models.editorial_board_model import EditorialRole
 from services import editorial_service, journal_service, mail_service, page_service, social_link_service
 from routes import Routes
 from paths import Paths
+from waitress import serve
 from google.api_core.exceptions import InvalidArgument
 
 
@@ -302,9 +303,14 @@ def get_social_links(subdomain):
 
 freezer = Freezer(app)
 
+mode = "prod"
+
 if __name__ == "__main__":
     # Comment this out when freezing
-    app.run(debug=True)
+    if mode == "dev":
+        app.run(host='0.0.0.0', port=5000, debug=True)
+    else:
+        serve(app, host='0.0.0.0', port=5000, threads=4)
 
     # Uncomment this to generate the static files
     freezer.freeze()
