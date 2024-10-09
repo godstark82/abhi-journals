@@ -17,8 +17,9 @@
         {% if issues %}
             {% for issue in issues %}
                 <div class="issue">
-                    <p><strong>Issue-{{ issue.issueNumber }}: {{ issue.title }}</strong></p>
-                    <p>Published on: {{ issue.createdAt }}</p>
+                    <p><strong>Issue-{{ issue.issue_number }}: {{ issue.title }}</strong></p>
+                    <p>From : {{ issue.from_date }}</p>
+                    <p>To : {{ issue.to_date }}</p>
                     <hr>
                 </div>
             {% endfor %}

@@ -1,5 +1,5 @@
 from db_instance import get_db
-from models.article_model import ArticleModel
+from models.article_model import ArticleModel, ArticleStatus
 from models.issue_model import IssueModel
 from models.journal_model import JournalModel
 from models.volume_model import VolumeModel
@@ -11,15 +11,13 @@ db = get_db()
 
 #! Article
 def get_articles_issue(issue_id) -> list[ArticleModel]:
-    articles = db.collection('articles').where(filter=firestore.FieldFilter('issueId', '==', issue_id)).where(filter=firestore.FieldFilter('status', '==', 'published')).get()
+    articles = db.collection('articles').where(filter=firestore.FieldFilter('issueId', '==', issue_id)).where(filter=firestore.FieldFilter('status', '==', ArticleStatus.PUBLISHED.value)).get()
     article_models = []
     for article in articles:
         json_data = json.dumps(article.to_dict())
         model = ArticleModel.from_json(json_data)
         article_models.append(model)
     return article_models
-
-
 
 
 #! Issue
@@ -67,3 +65,4 @@ def get_journal(journal_id) -> JournalModel:
         return model
     else:
         return None
+    

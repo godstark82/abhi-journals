@@ -1,3 +1,4 @@
+from typing import List, Optional
 from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
 from db_instance import get_db
 from models.editorial_board_model import EditorialRole
@@ -9,19 +10,34 @@ from waitress import serve
 from google.api_core.exceptions import InvalidArgument
 
 
-#! DB instance
-db = get_db();
-
 
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-# app.config['SERVER_NAME'] = 'abhijournals.com'
-app.config['SERVER_NAME'] = 'localhost:5000'
+app.config['SERVER_NAME'] = 'abhijournals.com'
+# app.config['SERVER_NAME'] = 'localhost:5000'
+
+db = get_db()
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
 journal: JournalModel = None
+
+def get_journal(all_journals: List[JournalModel], subdomain: str)-> Optional[JournalModel]:
+    journal = None
+    for journalItem in all_journals:
+        if journalItem.domain == subdomain:
+            journal = journalItem
+            break
+
+    if not journal:
+        return None
+    journal_details = journal_service.get_journal(journal.id)
+    return journal_details
+
+journal = get_journal(all_journals, "main")
+
+print(journal.to_dict())
 
 
 # Add a route for the root domain
@@ -32,20 +48,8 @@ def root_home():
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
 def Home(subdomain):
-    # Attempt to find the corresponding journal for the subdomain
-    journal = None
-    for journalItem in all_journals:
-        if journalItem.domain == subdomain:
-            journal = journalItem
-            break
-
-    if not journal:
-        return "Journal not found", 404
-
-    # Fetch detailed journal information
-    journal_details = journal_service.get_journal(journal.id)
-    if not journal_details:
-        return "Journal details not found", 404
+    # Attempt to find the corresponding journal for the subdomai
+    journal = get_journal(all_journals, subdomain)
 
     currentsubdomain = subdomain
 
@@ -66,7 +70,7 @@ def Home(subdomain):
         editors=editors_list,
         chief_editor_name=chief_editor_names,
         associate_editors=associate_editors_list,
-        journal=journal_details,
+        journal=journal,
         subdomain=currentsubdomain
     )
 
@@ -76,91 +80,45 @@ def Home(subdomain):
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
 def currissue(subdomain):
     # Find the journal that matches the subdomain
-    journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
-    if not journal:
-        error_message = "Journal not found"
-        return render_template(Paths.CURRENT_ISSUE, articles=[], error_message=error_message), 404
+    journal = get_journal(all_journals, subdomain)
 
     # Fetch active volumes for the current journal
-    active_volumes = db.collection('volumes').where('isActive', '==', True).where('journalId', '==', journal.id).stream()
-    active_volume_ids = [vol.id for vol in active_volumes]
+    active_volume_ids = [vol.id for vol in journal.get_all_active_volumes()]
 
     if not active_volume_ids:
         error_message = "No active volumes found for this journal"
         return render_template(Paths.CURRENT_ISSUE, articles=[], error_message=error_message), 404
     
     # Fetch active issue IDs based on active volumes for the current journal
-    active_issues = db.collection('issues').where('isActive', '==', True).where('volumeId', 'in', active_volume_ids).stream()
-    active_issue_ids = [issue.id for issue in active_issues]
+   
+    active_issue_ids = [issue.id for issue in journal.get_all_active_issues()]
 
     if not active_issue_ids:
         error_message = "No active issues found for this journal"
         return render_template(Paths.CURRENT_ISSUE, articles=[], error_message=error_message), 404
 
     # Fetch articles from Firestore
-    articles_ref = db.collection('articles').where('issueId', 'in', active_issue_ids)
-    articles = articles_ref.stream()
+    articles = journal.get_all_artcles_of_active_issues()
     
     # Extract titles from articles
-    article_data = [
-        {
-            'title': article.to_dict().get('title', 'No Title'),
-            'documentType': article.to_dict().get('documentType', 'Unknown Type'),
-            'authors': ', '.join([author.get('name', 'Unknown') for author in article.to_dict().get('authors', [])]),
-            'createdAt': article.to_dict().get('createdAt', 'Unknown Date'),
-            'abstractString': article.to_dict().get('abstractString', 'No abstract available'),
-            'keywords': article.to_dict().get('keywords', []),
-            'mainSubjects': article.to_dict().get('mainSubjects', []),
-            'references': article.to_dict().get('references', []),
-            'image': article.to_dict().get('image', None),
-            'pdf': article.to_dict().get('pdf', None)
-        } for article in articles
-    ]
 
-    return render_template(Paths.CURRENT_ISSUE, articles=article_data, error_message=None, subdomain=subdomain)
+    return render_template(Paths.CURRENT_ISSUE, articles=articles, error_message=None, subdomain=subdomain)
 
 
 
 @app.route(Routes.BY_ISSUE, subdomain='<subdomain>')
 def byissue(subdomain):
     # Find the journal that matches the subdomain
-    journal = next((journal for journal in all_journals if journal.domain == subdomain), None)
-    if not journal:
-        return render_template(Paths.BY_ISSUE, issues=[], error_message="Journal not found.")
-
-    # Fetch all volumes for the current journal
-    volumes_ref = db.collection('volumes').where('journalId', '==', journal.id)
-    volumes = volumes_ref.stream()
-    volume_ids = [volume.id for volume in volumes]
-
-    if not volume_ids:
+    journal = get_journal(all_journals, subdomain)
+    if not journal.volumes:
         # If there are no volumes, return an empty list of issues
         return render_template(Paths.BY_ISSUE, issues=[], error_message="No issues found for this journal.")
 
-    try:
-        # Fetch all issues for the current journal's volumes
-        issues_ref = db.collection('issues').where('volumeId', 'in', volume_ids)
-        issues = issues_ref.stream()
-        
-        all_issues = []
-        for issue in issues:
-            issue_data = issue.to_dict()
-            # Fetch articles for this issue
-            articles_ref = db.collection('articles').where('issueId', '==', issue.id).limit(1)
-            articles = articles_ref.stream()
-            
-            # Only add the issue if it has at least one article
-            if next(articles, None):
-                all_issues.append({
-                    'title': issue_data.get('title', 'Untitled Issue'),
-                    'issueNumber': issue_data.get('issueNumber', 'N/A'),
-                    'isActive': issue_data.get('isActive', False)
-                })
-        
+    try:    
+        issues = journal.get_all_issues()
         # Sort issues by issueNumber in descending order
-        all_issues.sort(key=lambda x: x['issueNumber'], reverse=True)
-        
-        return render_template(Paths.BY_ISSUE, issues=all_issues, error_message=None)
+        issues.sort(key=lambda x: x.issue_number, reverse=True)     
+        return render_template(Paths.BY_ISSUE, issues=issues, error_message=None)
     
     except InvalidArgument:
         # Handle the case where there are no issues
@@ -190,26 +148,12 @@ def archive(subdomain):
 @app.route('/volume/<volume_id>/issues', subdomain='<subdomain>')
 def volume_issues(subdomain, volume_id):
     # Fetch the issues for the volume that contain articles
-    issues_ref = db.collection('issues').where('volumeId', '==', volume_id)
-    issues = issues_ref.stream()
-
-    filtered_issues = []
-    for issue in issues:
-        # Check if the issue has articles
-        articles_ref = db.collection('articles').where('issueId', '==', issue.id).limit(1)
-        if len(list(articles_ref.stream())) > 0:
-            issue_data = issue.to_dict()
-            filtered_issues.append({
-                'id': issue.id,
-                'issueNumber': issue_data.get('issueNumber', 'N/A'),
-                'title': issue_data.get('title', 'Untitled'),
-                'createdAt': issue_data.get('createdAt', 'Unknown Date'),
-            })
-
-    if not filtered_issues:
+    journal = get_journal(all_journals, subdomain)
+    issues = journal.get_all_issues_of_volume(volume_id)
+    if not issues:
         return render_template(Paths.VOLUME_ISSUES, issues=[], error_message="No issues with articles found for this volume.")
     # return volume_id
-    return render_template(Paths.VOLUME_ISSUES, issues=filtered_issues)
+    return render_template(Paths.VOLUME_ISSUES, issues=issues)
 
 
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
@@ -224,24 +168,8 @@ def aimnscope(subdomain):
     
 @app.route(Routes.EDITORIAL_BOARD, subdomain='<subdomain>')
 def editboard(subdomain):
-    # Fetch editorial board data from Firestore
-    editorial_board_ref = db.collection('editorialBoard').stream()
-    
-    # Extract specific data from the fetched documents
-    board_members = [{
-        'role': member.to_dict().get('role', 'Unknown Role'),
-        'name': member.to_dict().get('name', 'Unknown Name'),
-        'institution': member.to_dict().get('institution', 'Unknown Institution'),
-        'email': member.to_dict().get('email', 'Unknown Email')
-    } for member in editorial_board_ref]
-
-    # Define a custom sort order for roles
-    role_priority = {'Chief Editor': 1, 'Associate Editor': 2, 'Editor': 3}
-    
-    # Sort the members by their role based on priority
-    board_members.sort(key=lambda x: role_priority.get(x['role'], 999))
-    
-    return render_template(Paths.EDITORIAL_BOARD, board_members=board_members)
+    eb_members = editorial_service.get_all_editorial_board_members()
+    return render_template(Paths.EDITORIAL_BOARD, board_members=eb_members)
 
 @app.route(Routes.PUBLICATION_ETHICS, subdomain='<subdomain>')
 def pubethics(subdomain):

@@ -55,8 +55,8 @@
         {% for issue in issues %}
         <div class="issue">
             <div class="issue-title">
-                Issue {{ issue.issueNumber }}: {{ issue.title }}
-                {% if not issue.isActive %}
+                Issue {{ issue.issue_number }}: {{ issue.title }}
+                {% if not issue.is_active %}
                     <span class="issue-status inactive">(Inactive)</span>
                 {% else %}
                     <span class="issue-status active">(Active)</span>

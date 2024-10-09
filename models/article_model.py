@@ -6,9 +6,9 @@ from models.comment_model import CommentModel
 from enum import Enum
 
 class ArticleStatus(Enum):
-    PUBLISHED = "published"
-    PENDING = "pending"
-    REJECTED = "rejected"
+    PUBLISHED = "Published"
+    PENDING = "Pending"
+    REJECTED = "Rejected"
 
 
 class ArticleModel:
