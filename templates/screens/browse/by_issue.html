@@ -54,6 +54,7 @@
     {% if issues %}
         {% for issue in issues %}
         <div class="issue">
+            <a href="{{ url_for('issue_details', subdomain=subdomain, issue_id=issue.id) }}">
             <div class="issue-title">
                 Issue {{ issue.issue_number }}: {{ issue.title }}
                 {% if not issue.is_active %}
@@ -62,6 +63,7 @@
                     <span class="issue-status active">(Active)</span>
                 {% endif %}
             </div>
+            </a>
         </div>
         {% endfor %}
     {% else %}

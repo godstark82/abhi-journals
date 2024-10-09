@@ -14,8 +14,8 @@ from google.api_core.exceptions import InvalidArgument
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-app.config['SERVER_NAME'] = 'abhijournals.com'
-# app.config['SERVER_NAME'] = 'localhost:5000'
+# app.config['SERVER_NAME'] = 'abhijournals.com'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 db = get_db()
 
@@ -23,7 +23,7 @@ db = get_db()
 all_journals = journal_service.get_all_journals()
 journal: JournalModel = None
 
-def get_journal(all_journals: List[JournalModel], subdomain: str)-> Optional[JournalModel]:
+def get_journal(all_journals: List[JournalModel], subdomain: str = "main")-> Optional[JournalModel]:
     journal = None
     for journalItem in all_journals:
         if journalItem.domain == subdomain:
@@ -35,9 +35,6 @@ def get_journal(all_journals: List[JournalModel], subdomain: str)-> Optional[Jou
     journal_details = journal_service.get_journal(journal.id)
     return journal_details
 
-journal = get_journal(all_journals, "main")
-
-print(journal.to_dict())
 
 
 # Add a route for the root domain
@@ -63,9 +60,13 @@ def Home(subdomain):
     associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
     chief_editor_names = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
 
+    # Fetch articles from Firestore
+    articles = journal.get_all_artcles_of_active_issues()
+
     # Return the home page with the fetched content and editorial board data
     return render_template(
         Paths.INDEX,
+        articles=articles,
         content=content,
         editors=editors_list,
         chief_editor_name=chief_editor_names,
@@ -80,14 +81,14 @@ def Home(subdomain):
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
 def currissue(subdomain):
     # Find the journal that matches the subdomain
-    journal = get_journal(all_journals, subdomain)
+    journal = get_journal(all_journals, subdomain = subdomain)
+    error_message = None
 
     # Fetch active volumes for the current journal
     active_volume_ids = [vol.id for vol in journal.get_all_active_volumes()]
 
     if not active_volume_ids:
         error_message = "No active volumes found for this journal"
-        return render_template(Paths.CURRENT_ISSUE, articles=[], error_message=error_message), 404
     
     # Fetch active issue IDs based on active volumes for the current journal
    
@@ -95,15 +96,13 @@ def currissue(subdomain):
 
     if not active_issue_ids:
         error_message = "No active issues found for this journal"
-        return render_template(Paths.CURRENT_ISSUE, articles=[], error_message=error_message), 404
 
     # Fetch articles from Firestore
     articles = journal.get_all_artcles_of_active_issues()
     
     # Extract titles from articles
 
-    return render_template(Paths.CURRENT_ISSUE, articles=articles, error_message=None, subdomain=subdomain)
-
+    return render_template(Paths.CURRENT_ISSUE, articles=articles, error_message=error_message, subdomain=subdomain)
 
 
 @app.route(Routes.BY_ISSUE, subdomain='<subdomain>')
@@ -112,13 +111,13 @@ def byissue(subdomain):
     journal = get_journal(all_journals, subdomain)
     if not journal.volumes:
         # If there are no volumes, return an empty list of issues
-        return render_template(Paths.BY_ISSUE, issues=[], error_message="No issues found for this journal.")
+        return render_template(Paths.BY_ISSUE, issues=[], error_message="No issues found for this journal.", subdomain=subdomain)
 
     try:    
         issues = journal.get_all_issues()
         # Sort issues by issueNumber in descending order
         issues.sort(key=lambda x: x.issue_number, reverse=True)     
-        return render_template(Paths.BY_ISSUE, issues=issues, error_message=None)
+        return render_template(Paths.BY_ISSUE, issues=issues, error_message=None, subdomain=subdomain)
     
     except InvalidArgument:
         # Handle the case where there are no issues
@@ -142,10 +141,18 @@ def archive(subdomain):
     # Pass all volumes to the template
     return render_template(Paths.ARCHIVE, journal=journal, error_message=error_message, subdomain=subdomain)
 
+@app.route(Routes.ISSUE_DETAILS + '/<issue_id>/articles/' , subdomain='<subdomain>')
+def issue_details(subdomain, issue_id):
+    journal = get_journal(all_journals, subdomain)
+    articles = journal.get_all_articles_of_issue(issue_id)
+    return render_template(Paths.ISSUE_DETAILS, articles=articles, subdomain=subdomain)
 
-@app.route(Routes.ARTICLE_DETAILS, subdomain='<subdomain>')
-def article_details(subdomain):
-    return render_template(Paths.ARTICLE_DETAILS, subdomain=subdomain)
+
+@app.route(Routes.ARTICLE_DETAILS + '/<article_id>', subdomain='<subdomain>')
+def article_details(subdomain, article_id):
+    journal = get_journal(all_journals, subdomain)
+    article = journal.get_article_by_id(article_id)
+    return render_template(Paths.ARTICLE_DETAILS, subdomain=subdomain, article=article)
 
 
 # New route to handle issues for a specific volume

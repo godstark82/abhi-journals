@@ -1,5 +1,6 @@
 class Paths:
     INDEX = 'index.html'
+    ISSUE_DETAILS = 'screens/browse/current_issue.html'
     CURRENT_ISSUE = 'screens/browse/current_issue.html'
     ARTICLE_DETAILS = 'screens/browse/article_details.html'
     BY_ISSUE = 'screens/browse/by_issue.html'

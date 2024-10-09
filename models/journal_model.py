@@ -106,4 +106,20 @@ class JournalModel:
                 for issue in volume.issues:
                     result_issues.append(issue)
         return result_issues
+    
+    def get_all_articles_of_issue(self, issue_id: str) -> List[ArticleModel]:
+        result_articles = []
+        for volume in self.volumes:
+            for issue in volume.issues:
+                if issue.id == issue_id:
+                    for article in issue.articles:
+                        result_articles.append(article)
+        return result_articles
 
+    def get_article_by_id(self, article_id: str) -> ArticleModel:
+        for volume in self.volumes:
+            for issue in volume.issues:
+                for article in issue.articles:
+                    if article.id == article_id:
+                        return article
+        return None

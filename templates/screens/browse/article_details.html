@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block body %}
+<head>
+    <style>
+        section {
+            margin: 20px;
+            padding: 20px;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+    </style>
+<title>Article Details</title>
+</head>
+<body>
+    <section>
+        <div class="article-container">
+            {% if article.image_url %}
+            <div class="article-image-container">
+                <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-image">
+            </div>
+            {% endif %}
+            <div class="article-content">
+                <h2>{{ article.title }}</h2>
+                <p class="article-authors">{{ article.authors }}</p>
+                <p><strong>Abstract:</strong> {{ article.abstract }}</p>
+                <div class="article-meta">
+                    <p><strong>Keywords:</strong> {{ article.keywords }}</p>
+                    <p><strong>Published:</strong> {{ article.publication_date }}</p>
+                    <p><strong>DOI:</strong> {{ article.doi }}</p>
+                </div>
+                {% if article.pdf_url %}
+                <a href="{{ article.pdf_url }}" class="btn btn-primary pdf-button" target="_blank">
+                    <i class="fas fa-file-pdf pdf-icon"></i>
+                    <span class="pdf-text-normal">Download </span>
+                    <span class="pdf-text-bold">PDF</span>
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+</body>
+
+{% endblock %}

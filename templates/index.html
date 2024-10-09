@@ -6,64 +6,22 @@
 <div class="container-fluid pt-5 mb-3">
     <div class="container">
         <div class="section-title">
-            <h4 class="m-0 text-uppercase font-weight-bold">Featured Journals</h4>
+            <h4 class="m-0 text-uppercase font-weight-bold">Current Issue Articles</h4>
         </div>
         <div class="owl-carousel news-carousel carousel-item-4 position-relative">
+            {% for article in articles %}
             <div class="position-relative overflow-hidden" style="height: 300px;">
-                <img class="img-fluid h-100" src="{{ url_for('static', filename='img/news-700x435-1.jpg') }}"
+                <img class="img-fluid h-100" src="{{ article.image }}"
                     style="object-fit: cover;">
                 <div class="overlay">
                     <div class="mb-2">
-                        <a class="text-white" href=""><small>Jan 01, 2045</small></a>
+                        <a class="text-white" href="{{ url_for('article_details', subdomain=subdomain, article_id=article.id) }}"><small>{{ article.created_at }}</small></a>
                     </div>
-                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="">Lorem ipsum dolor sit amet
-                        elit...</a>
+                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="{{ url_for('article_details', subdomain=subdomain, article_id=article.id) }}">{{ article.title }}
+                        </a>
                 </div>
             </div>
-            <div class="position-relative overflow-hidden" style="height: 300px;">
-                <img class="img-fluid h-100" src="{{ url_for('static', filename='img/news-700x435-2.jpg') }}"
-                    style="object-fit: cover;">
-                <div class="overlay">
-                    <div class="mb-2">
-                        <a class="text-white" href=""><small>Jan 01, 2045</small></a>
-                    </div>
-                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="">Lorem ipsum dolor sit amet
-                        elit...</a>
-                </div>
-            </div>
-            <div class="position-relative overflow-hidden" style="height: 300px;">
-                <img class="img-fluid h-100" src="{{ url_for('static', filename='img/news-700x435-3.jpg') }}"
-                    style="object-fit: cover;">
-                <div class="overlay">
-                    <div class="mb-2">
-                        <a class="text-white" href=""><small>Jan 01, 2045</small></a>
-                    </div>
-                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="">Lorem ipsum dolor sit amet
-                        elit...</a>
-                </div>
-            </div>
-            <div class="position-relative overflow-hidden" style="height: 300px;">
-                <img class="img-fluid h-100" src="{{ url_for('static', filename='img/news-700x435-4.jpg') }}"
-                    style="object-fit: cover;">
-                <div class="overlay">
-                    <div class="mb-2">
-                        <a class="text-white" href=""><small>Jan 01, 2045</small></a>
-                    </div>
-                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="">Lorem ipsum dolor sit amet
-                        elit...</a>
-                </div>
-            </div>
-            <div class="position-relative overflow-hidden" style="height: 300px;">
-                <img class="img-fluid h-100" src="{{ url_for('static', filename='img/news-700x435-5.jpg') }}"
-                    style="object-fit: cover;">
-                <div class="overlay">
-                    <div class="mb-2">
-                        <a class="text-white" href=""><small>Jan 01, 2045</small></a>
-                    </div>
-                    <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="">Lorem ipsum dolor sit amet
-                        elit...</a>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </div>
@@ -119,11 +77,12 @@
                             <b>Chief Editor</b> <br>
                             {% if chief_editor_name %}
                             {% for chief in chief_editor_name %}
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ chief }}</a> <br>
+                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ chief
+                                }}</a> <br>
                             {% endfor %}
                             {% else %}
-                                <p>No Chief Editor found.</p>
-                            {% endif %}
+                        <p>No Chief Editor found.</p>
+                        {% endif %}
                         </p>
 
                         <p style="color: #31404B">
@@ -131,12 +90,12 @@
                             <b> Associate Editors</b> <br>
                             {% if associate_editors %}
                             {% for associate in associate_editors %}
-                            <a href="/editorial_board.html"
-                                style="color: #033e93;text-decoration: none;">{{ associate }}</a> <br>
+                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ associate
+                                }}</a> <br>
                             {% endfor %}
                             {% else %}
-                            <p>No Associate Editors found.</p>
-                            {% endif %}
+                        <p>No Associate Editors found.</p>
+                        {% endif %}
                         </p>
 
                         <p style="color: #31404B">
@@ -144,13 +103,14 @@
                             <b>Editors</b> <br>
                             {% if editors %}
                             {% for editor in editors %}
-                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ editor }}</a> <br>
+                            <a href="/editorial_board.html" style="color: #033e93;text-decoration: none;">{{ editor
+                                }}</a> <br>
                             {% endfor %}
                             {% else %}
                         <p>No Editors found.</p>
                         {% endif %}
                         </p>
-                        
+
                     </div>
                 </div>
 
