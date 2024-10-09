@@ -72,9 +72,14 @@
         </div>
         <div class="row align-items-center bg-white py-3 px-lg-5">
             <div class="col-lg-4">
-                <a href="/" class="navbar-brand p-0 d-none d-lg-block">
-                    <h1 class="m-0 display-4 text-uppercase text-primary">Jour<span
-                            class="text-secondary font-weight-normal">Nal</span></h1>
+                <a href="#" class="navbar-brand p-0 d-none d-lg-block">
+                    {% if subdomain == 'main' %}
+                        <h1 class="m-0 display-4 text-uppercase text-primary">Abhi <span
+                                class="text-secondary font-weight-normal">Journal</span></h1>
+                    {% else %}
+                        <h1 class="m-0 display-4 text-uppercase text-primary">{{ subdomain }} <span
+                                class="text-secondary font-weight-normal">Journal</span></h1>
+                    {% endif %}
                 </a>
             </div>
             <!-- login button -->
@@ -145,13 +150,12 @@
 
                     <a href="/submanuscript.html" class="nav-item nav-link">Submit Manuscript</a>
                     <a href="/reviewer.html" class="nav-item nav-link">Reviewer</a>
-
                     <a href="/contact.html" class="nav-item nav-link">Contact</a>
                 </div>
             </div>
         </nav>
     </div>
-    <!-- Navbar End -->
+    <!-- Navbar End --> 
 
 
     <!-- Breaking News Start -->
@@ -200,15 +204,13 @@
             </div>
         </div>
 
-        <div class="row py-1 justify-content-center">
-            <div class="col-12 text-center">
+        <div class="row py-1">
+            <div class="col-md-6 text-left">
                 <h5 class="mb-4 text-white text-uppercase font-weight-bold">Get In Touch</h5>
-                <div class="d-flex flex-column flex-md-row justify-content-center align-items-center">
-                    <p class="font-weight-medium mb-2 mb-md-0 mr-md-4"><i class="fa fa-map-marker-alt mr-2"></i>123
-                        Street, New York, USA</p>
-                    <p class="font-weight-medium mb-2 mb-md-0 mr-md-4"><i class="fa fa-phone-alt mr-2"></i>+012 345
-                        67890</p>
-                    <p class="font-weight-medium mb-0"><i class="fa fa-envelope mr-2"></i>info@example.com</p>
+                <div class="d-flex flex-column">
+                    <p class="font-weight-medium mb-2"><i class="fa fa-map-marker-alt mr-2"></i>1. Vitthal Namdev Nagar, Opp Jain Temple Sanganer Sanganer Bazar Jaipur 302029 Rajasthan (India)</p>
+                    <p class="font-weight-medium mb-2"><i class="fa fa-phone-alt mr-2"></i>+91-9799997157</p>
+                    <p class="font-weight-medium mb-0"><i class="fa fa-envelope mr-2"></i>support@janolijournals.org</p>
                 </div>
             </div>
         </div>
@@ -216,9 +218,7 @@
     </div>
 
     <div class="container-fluid py-4 px-sm-3 px-md-5" style="background: #111111;">
-        <p class="m-0 text-center">&copy; <a href="#">Your Site Name</a>. All Rights Reserved.
-            <span class="d-block d-sm-inline-block mt-2 mt-sm-0">Design by <a href="https://htmlcodex.com">HTML
-                    Codex</a></span>
+        <p class="m-0 text-center">&copy; <a href="#">Abhi Journals</a>. All Rights Reserved.
         </p>
     </div>
     <!-- Footer End -->

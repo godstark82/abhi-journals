@@ -1,4 +1,3 @@
-
 from db_instance import get_db
 from models.article_model import ArticleModel
 from models.issue_model import IssueModel

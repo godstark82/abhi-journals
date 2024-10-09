@@ -1,6 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
 <head>
+    <style>
+        section {
+            margin: 20px;
+            padding: 20px;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+    </style>
     <title>Volume Issues</title>
 </head>
 <body>
@@ -8,7 +17,7 @@
         {% if issues %}
             {% for issue in issues %}
                 <div class="issue">
-                    <h3>Issue-{{ issue.issueNumber }}: {{ issue.title }}</h3>
+                    <p><strong>Issue-{{ issue.issueNumber }}: {{ issue.title }}</strong></p>
                     <p>Published on: {{ issue.createdAt }}</p>
                     <hr>
                 </div>

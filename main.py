@@ -9,7 +9,6 @@ from waitress import serve
 from google.api_core.exceptions import InvalidArgument
 
 
-
 #! DB instance
 db = get_db();
 
@@ -17,14 +16,12 @@ db = get_db();
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-app.config['SERVER_NAME'] = 'abhijournals.com'
-# app.config['SERVER_NAME'] = 'localhost:5000'
+# app.config['SERVER_NAME'] = 'abhijournals.com'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
 journal: JournalModel = None
-
-
 
 
 # Add a route for the root domain
@@ -35,28 +32,44 @@ def root_home():
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
 def Home(subdomain):
+    # Attempt to find the corresponding journal for the subdomain
+    journal = None
     for journalItem in all_journals:
         if journalItem.domain == subdomain:
             journal = journalItem
             break
 
-    journal = journal_service.get_journal(journal.id)
-    currentsubdomain = subdomain
     if not journal:
         return "Journal not found", 404
 
-    #! Fetch the content for the home page
+    # Fetch detailed journal information
+    journal_details = journal_service.get_journal(journal.id)
+    if not journal_details:
+        return "Journal details not found", 404
+
+    currentsubdomain = subdomain
+
+    # Fetch the content for the home page
     doc_id = "8061MAE63evqpTPdIvlz"
     content = page_service.get_page(doc_id)
 
-    #! Fetch editorial board members
+    # Fetch editorial board members
     all_editorial_board_members = editorial_service.get_all_editorial_board_members()
     editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
     associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
-    chief_editor_name = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
-    
-    #! return the home page with the content and the editors' data
-    return render_template(Paths.INDEX, content=content, editors=editors_list, chief_editor_name=chief_editor_name, associate_editors=associate_editors_list, journal=journal, subdomain=currentsubdomain)
+    chief_editor_names = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]
+
+    # Return the home page with the fetched content and editorial board data
+    return render_template(
+        Paths.INDEX,
+        content=content,
+        editors=editors_list,
+        chief_editor_name=chief_editor_names,
+        associate_editors=associate_editors_list,
+        journal=journal_details,
+        subdomain=currentsubdomain
+    )
+
 
 
 
@@ -104,7 +117,7 @@ def currissue(subdomain):
         } for article in articles
     ]
 
-    return render_template(Paths.CURRENT_ISSUE, articles=article_data, error_message=None)
+    return render_template(Paths.CURRENT_ISSUE, articles=article_data, error_message=None, subdomain=subdomain)
 
 
 
@@ -155,7 +168,6 @@ def byissue(subdomain):
 
 @app.route(Routes.ARCHIVE, subdomain='<subdomain>')
 def archive(subdomain): 
-    # journal_data = []
     # Find the journal that matches the subdomain
     for journalItem in all_journals:
         if journalItem.domain == subdomain:
@@ -170,6 +182,7 @@ def archive(subdomain):
     else:
         error_message = None
 
+    
     # Pass all volumes to the template
     return render_template(Paths.ARCHIVE, journal=journal, error_message=error_message)
 
