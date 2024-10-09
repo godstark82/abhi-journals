@@ -122,7 +122,7 @@ def byissue(subdomain):
     
     except InvalidArgument:
         # Handle the case where there are no issues
-        return render_template(Paths.BY_ISSUE, issues=[], error_message="No issues found for this journal.")
+        return render_template(Paths.BY_ISSUE, issues=[], subdomain=subdomain, error_message="No issues found for this journal.")
 
 @app.route(Routes.ARCHIVE, subdomain='<subdomain>')
 def archive(subdomain): 
@@ -139,10 +139,14 @@ def archive(subdomain):
         error_message = "No volumes with articles found for this journal."
     else:
         error_message = None
-
-    
     # Pass all volumes to the template
-    return render_template(Paths.ARCHIVE, journal=journal, error_message=error_message)
+    return render_template(Paths.ARCHIVE, journal=journal, error_message=error_message, subdomain=subdomain)
+
+
+@app.route(Routes.ARTICLE_DETAILS, subdomain='<subdomain>')
+def article_details(subdomain):
+    return render_template(Paths.ARTICLE_DETAILS, subdomain=subdomain)
+
 
 # New route to handle issues for a specific volume
 @app.route('/volume/<volume_id>/issues', subdomain='<subdomain>')
@@ -153,73 +157,73 @@ def volume_issues(subdomain, volume_id):
     if not issues:
         return render_template(Paths.VOLUME_ISSUES, issues=[], error_message="No issues with articles found for this volume.")
     # return volume_id
-    return render_template(Paths.VOLUME_ISSUES, issues=issues)
+    return render_template(Paths.VOLUME_ISSUES, issues=issues, subdomain=subdomain)
 
 
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
 def about_journal(subdomain):
     doc_id = "s7zN7Ce9XCsEOP63CtUb"
-    return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page(doc_id))
+    return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page(doc_id), subdomain=subdomain)
 
 @app.route(Routes.AIM_AND_SCOPE, subdomain='<subdomain>')
 def aimnscope(subdomain):
     doc_id = "w45mTbOFFg54c7HSU4Ay"    
-    return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page(doc_id))
+    return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page(doc_id), subdomain=subdomain)
     
 @app.route(Routes.EDITORIAL_BOARD, subdomain='<subdomain>')
 def editboard(subdomain):
     eb_members = editorial_service.get_all_editorial_board_members()
-    return render_template(Paths.EDITORIAL_BOARD, board_members=eb_members)
+    return render_template(Paths.EDITORIAL_BOARD, board_members=eb_members, subdomain=subdomain)
 
 @app.route(Routes.PUBLICATION_ETHICS, subdomain='<subdomain>')
 def pubethics(subdomain):
     doc_id = "W6bSKPFmVh6ejZMVxsWr"
-    return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page(doc_id))
+    return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page(doc_id), subdomain=subdomain)
 
     
 @app.route(Routes.PEER_REVIEW_PROCESS, subdomain='<subdomain>')
 def peerpro(subdomain):
 
     doc_id = "CZpNkvbYXi0Ae5RQASJp"
-    return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page(doc_id))
+    return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page(doc_id), subdomain=subdomain)
     
 
 @app.route(Routes.INDEXING_AND_ABSTRACTING, subdomain='<subdomain>')
 def indnabs(subdomain):
-    return render_template(Paths.INDEXING_AND_ABSTRACTING)
+    return render_template(Paths.INDEXING_AND_ABSTRACTING, subdomain=subdomain)
 
 @app.route(Routes.SUBMIT_ONLINE_PAPER, subdomain='<subdomain>')
 def subon(subdomain):
-    return render_template(Paths.SUBMIT_ONLINE_PAPER)
+    return render_template(Paths.SUBMIT_ONLINE_PAPER, subdomain=subdomain)
 
 @app.route(Routes.TOPICS, subdomain='<subdomain>')
 def topic(subdomain):
     doc_id = "QoxjARRGKlL7BKUtcpQM"
-    return render_template(Paths.TOPICS, content=page_service.get_page(doc_id))
+    return render_template(Paths.TOPICS, content=page_service.get_page(doc_id), subdomain=subdomain)
 
 @app.route(Routes.AUTHOR_GUIDELINES, subdomain='<subdomain>')
 def authgl(subdomain):
 
     doc_id = "4OJKeKoJ3LStfoEU88Hu"
-    return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page(doc_id))
+    return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page(doc_id), subdomain=subdomain)
 
 @app.route(Routes.COPYRIGHT_FORM, subdomain='<subdomain>')
 def crform(subdomain):
-    return render_template(Paths.COPYRIGHT_FORM)
+    return render_template(Paths.COPYRIGHT_FORM, subdomain=subdomain)
 @app.route(Routes.CHECK_PAPER_STATUS, subdomain='<subdomain>')
 def checkpapstat(subdomain):
-    return render_template(Paths.CHECK_PAPER_STATUS)
+    return render_template(Paths.CHECK_PAPER_STATUS, subdomain=subdomain)
 @app.route(Routes.MEMBERSHIP, subdomain='<subdomain>')
 def mship(subdomain):
-    return render_template(Paths.MEMBERSHIP)
+    return render_template(Paths.MEMBERSHIP, subdomain=subdomain)
 @app.route(Routes.SUBMIT_MANUSCRIPT, subdomain='<subdomain>')
 def submitmanscr(subdomain):
-    return render_template(Paths.SUBMIT_MANUSCRIPT)
+    return render_template(Paths.SUBMIT_MANUSCRIPT, subdomain=subdomain)
 @app.route(Routes.REVIEWER, subdomain='<subdomain>')
 def reviewer(subdomain):
 
     doc_id = "GiZuANsNXJTxZdt8jQbR"
-    return render_template(Paths.REVIEWER, content=page_service.get_page(doc_id))
+    return render_template(Paths.REVIEWER, content=page_service.get_page(doc_id), subdomain=subdomain)
 
 @app.route(Routes.CONTACT, subdomain='<subdomain>', methods=['GET', 'POST'])
 def ContactUs(subdomain):    
@@ -241,7 +245,7 @@ def ContactUs(subdomain):
         flash('Your message has been successfully submitted!', 'success')
         return redirect(url_for('ContactUs'))
     
-    return render_template(Paths.CONTACT, content=content)
+    return render_template(Paths.CONTACT, content=content, subdomain=subdomain)
 
 
 @app.route(Routes.GET_SOCIAL_LINKS, subdomain='<subdomain>')

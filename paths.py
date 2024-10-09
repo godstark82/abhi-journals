@@ -1,7 +1,7 @@
 class Paths:
     INDEX = 'index.html'
     CURRENT_ISSUE = 'screens/browse/current_issue.html'
-    # ARTICLE_DETAILS = 'screens/browse/article_details.html'
+    ARTICLE_DETAILS = 'screens/browse/article_details.html'
     BY_ISSUE = 'screens/browse/by_issue.html'
     ARCHIVE = 'screens/archivee/archive_2024.html'
     VOLUME_ISSUES = 'screens/archivee/issues.html'

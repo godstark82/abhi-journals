@@ -1,7 +1,7 @@
 class Routes:
     HOME = "/"
     CURRENT_ISSUE = "/current_issue.html"
-    # ARTICLE_DETAILS = "/article_details/<article_id>"
+    ARTICLE_DETAILS = "/article_details.html"
     BY_ISSUE = "/by_issue.html"
     ARCHIVE = "/archive_2024.html"
     VOLUME_ISSUES = "/issues.html"
