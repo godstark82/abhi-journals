@@ -21,6 +21,23 @@
 
     <!-- Customized Bootstrap Stylesheet -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        .heading-text {
+            width: 100%;
+            height: 100px;
+            font-size: 28px;
+            line-height: 1.2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .heading-text span {
+            display: block;
+        }
+    </style>
 </head>
 
 <body>
@@ -37,8 +54,8 @@
                             <a class="nav-link text-body small" href="/contact.html">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-body small"
-                                href="https://admin.abhijournals.com/" target="_blank">Login</a>
+                            <a class="nav-link text-body small" href="https://admin.abhijournals.com/"
+                                target="_blank">Login</a>
                         </li>
                     </ul>
                 </nav>
@@ -72,14 +89,10 @@
         </div>
         <div class="row align-items-center bg-white py-3 px-lg-5">
             <div class="col-lg-4">
-                <a href="#" class="navbar-brand p-0 d-none d-lg-block">
-                    {% if subdomain == 'main' %}
-                        <h1 class="m-0 display-4 text-uppercase text-primary">Abhi <span
-                                class="text-secondary font-weight-normal">Journal</span></h1>
-                    {% else %}
-                        <h1 class="m-0 display-4 text-uppercase text-primary">{{ subdomain }} <span
-                                class="text-secondary font-weight-normal">Journal</span></h1>
-                    {% endif %}
+                <a href="/" class="navbar-brand p-0 d-none d-lg-block">
+                    <div class="heading-text">
+                        <h6 class=" ">{{ journal.title }}</h6>
+                    </div>
                 </a>
             </div>
             <!-- login button -->
@@ -95,11 +108,12 @@
     <!-- Navbar Start -->
     <div class="container-fluid p-0">
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-2 py-lg-0 px-lg-5">
-            <a href="index.html" class="navbar-brand d-block d-lg-none">
-                <h1 class="m-0 display-4 text-uppercase text-primary">Jour<span
-                        class="text-white font-weight-normal">nal</span></h1>
+            <a href="/" class="navbar-brand d-block d-lg-none">
+                <div class="heading-text">
+                    <h6 class=" ">{{ journal.title }}</h6>
+                </div>
             </a>
-            <a href="https://godstark82.github.io/journal_admin/#/login" class="btn px-3 d-block d-lg-none"
+            <a href="https://admin.abhijournals.com/" class="btn px-3 d-block d-lg-none"
                 style="background-color: #033e93; color: white; border-radius: 5px; margin-right: 1px;">
                 Login
             </a>
@@ -155,7 +169,7 @@
             </div>
         </nav>
     </div>
-    <!-- Navbar End --> 
+    <!-- Navbar End -->
 
 
     <!-- Breaking News Start -->
@@ -208,7 +222,8 @@
             <div class="col-md-6 text-left">
                 <h5 class="mb-4 text-white text-uppercase font-weight-bold">Get In Touch</h5>
                 <div class="d-flex flex-column">
-                    <p class="font-weight-medium mb-2"><i class="fa fa-map-marker-alt mr-2"></i>1. Vitthal Namdev Nagar, Opp Jain Temple Sanganer Sanganer Bazar Jaipur 302029 Rajasthan (India)</p>
+                    <p class="font-weight-medium mb-2"><i class="fa fa-map-marker-alt mr-2"></i>1. Vitthal Namdev Nagar,
+                        Opp Jain Temple Sanganer Sanganer Bazar Jaipur 302029 Rajasthan (India)</p>
                     <p class="font-weight-medium mb-2"><i class="fa fa-phone-alt mr-2"></i>+91-9799997157</p>
                     <p class="font-weight-medium mb-0"><i class="fa fa-envelope mr-2"></i>support@janolijournals.org</p>
                 </div>
@@ -235,7 +250,7 @@
     <script src="{{ url_for('static', filename='lib/owlcarousel/owl.carousel.min.js') }}"></script>
 
     <!-- Template Javascript -->
-    <script src="{{ url_for('static', filename='js/main.js') }}"></script>      
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 
 </body>
 

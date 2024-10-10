@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for, f
 from db_instance import get_db
 from models.editorial_board_model import EditorialRole
 from models.journal_model import JournalModel
-from services import editorial_service, journal_service, mail_service, page_service, social_link_service
+from services import editorial_service, journal_service, mail_service, page_service, social_link_service, user_service
 from routes import Routes
 from paths import Paths
 from waitress import serve
@@ -63,11 +63,13 @@ def Home(subdomain):
 
     # Fetch articles from Firestore
     articles = journal.get_all_artcles_of_active_issues()
+    users_count = user_service.get_all_users_count()
 
     # Return the home page with the fetched content and editorial board data
     return render_template(
         Paths.INDEX,
         articles=articles,
+        users_count=users_count,
         content=content,
         editors=editors_list,
         chief_editor_name=chief_editor_names,

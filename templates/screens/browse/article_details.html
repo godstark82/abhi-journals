@@ -11,12 +11,16 @@
             margin-bottom: 20px;
             position: relative;
         }
+
         .article-image {
-            max-width: 100%;
+            aspect-ratio: 16/9;
+            width: 100%;
             height: auto;
+            object-fit: cover;
             margin-bottom: 20px;
             border-radius: 10px;
         }
+
         .download-btn {
             display: block;
             margin-top: 10px;
@@ -29,42 +33,51 @@
             width: 100%;
             transition: background-color 0.3s ease;
         }
+
         .download-btn:hover {
             background-color: #0056b3;
             color: white;
         }
+
         .references-toggle {
             cursor: pointer;
             user-select: none;
         }
+
         .references-content {
             display: none;
             margin-left: 20px;
             text-align: justify;
         }
+
         @media (max-width: 767px) {
             .mobile-order {
                 display: flex;
                 flex-direction: column;
             }
+
             .mobile-order .article-content {
                 order: 1;
             }
+
             .mobile-order .article-image-container {
                 order: 2;
             }
         }
+
         @media (min-width: 768px) {
             .article-image {
                 float: right;
                 max-width: 25%;
                 margin-left: 20px;
             }
+
             .download-btn {
                 width: 25%;
                 float: right;
                 clear: right;
             }
+
             .references-content {
                 margin-left: 40px;
             }
@@ -95,7 +108,9 @@
             <p><strong>Authors:</strong> Not specified</p>
             {% endif %}
             <p><strong>Abstract:</strong></p>
-            <p style="margin-left: 20px; text-align: justify;">{{ article.abstract_string }}</p>
+            <div class="abstact">
+                <p style="margin-left: 20px; text-align: justify;">{{ article.abstract_string }}</p>
+            </div>
             <p><strong>Keywords:</strong> {{ article.keywords | join(', ') }}</p>
             <p><strong>Main Subjects:</strong> {{ article.main_subjects | join(', ') }}</p>
             <p class="references-toggle">
@@ -103,7 +118,9 @@
                 <i class="fas fa-chevron-down" id="references-icon"></i>
             </p>
             <div class="references-content" id="references-content">
-                {{ article.references | join(', ') }}
+                {% for reference in article.references %}
+                    <p>{{ reference }}</p>
+                {% endfor %}
             </div>
         </div>
     </section>

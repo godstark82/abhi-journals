@@ -166,11 +166,11 @@
                         <div class="table-responsive mt-3">
                             <table class="table table-bordered" style="color: #31404b;">
                                 <tbody>
-                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                    <!-- <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
                                         onmouseout="this.style.backgroundColor=''">
                                         <td>Issue Per Year</td>
                                         <td>02</td>
-                                    </tr>
+                                    </tr> -->
                                     <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
                                         onmouseout="this.style.backgroundColor=''">
                                         <td>Number of Volumes</td>
@@ -184,12 +184,12 @@
                                     <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
                                         onmouseout="this.style.backgroundColor=''">
                                         <td>Number of Articles</td>
-                                        <td>05</td>
+                                        <td>{{ journal.get_all_published_articles_of_journal()|length }}</td>
                                     </tr>
                                     <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
                                         onmouseout="this.style.backgroundColor=''">
                                         <td>Number of Contributors</td>
-                                        <td>10</td>
+                                        <td>{{ users_count }}</td>
                                     </tr>
                                 </tbody>
                             </table>
