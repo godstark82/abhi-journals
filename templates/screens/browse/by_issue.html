@@ -24,6 +24,8 @@
         .issue-title {
             font-weight: bold;
             margin-bottom: 5px;
+            color: black;
+            word-wrap: break-word;
         }
 
         .issue-status {
@@ -31,6 +33,7 @@
             padding: 2px 5px;
             border-radius: 3px;
             margin-left: 5px;
+            display: inline-block;
         }
 
         .active {
@@ -46,6 +49,28 @@
             color: #7f8c8d;
             font-style: italic;
         }
+
+        @media (max-width: 768px) {
+            .issues-container {
+                margin: 10px;
+                padding: 10px;
+            }
+
+            .issue {
+                padding: 8px;
+            }
+
+            .issue-title {
+                font-size: 0.9em;
+            }
+
+            .issue-status {
+                font-size: 0.8em;
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+        }
     </style>
     <title>By Issue</title>
 </head>
@@ -54,7 +79,7 @@
     {% if issues %}
         {% for issue in issues %}
         <div class="issue">
-            <a href="{{ url_for('issue_details', subdomain=subdomain, issue_id=issue.id) }}">
+            <a href="{{ url_for('issue_details', subdomain=subdomain, issue_id=issue.id) }}" style="color: black; text-decoration: none;">
             <div class="issue-title">
                 Issue {{ issue.issue_number }}: {{ issue.title }}
                 {% if not issue.is_active %}

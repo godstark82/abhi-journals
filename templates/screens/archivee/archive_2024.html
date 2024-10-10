@@ -53,6 +53,32 @@
             color: #7f8c8d;
             font-style: italic;
         }
+
+        @media (max-width: 768px) {
+            section, .volumes-container {
+                margin: 10px;
+                padding: 10px;
+            }
+
+            .volume {
+                padding: 5px;
+            }
+
+            .volume-title {
+                font-size: 0.9em;
+            }
+
+            .volume-status {
+                font-size: 0.8em;
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .volume-created-at {
+                font-size: 0.8em;
+            }
+        }
     </style>
     <title>Archive {% if journal %}{{ journal.name }}{% endif %}</title>
 </head>
@@ -73,7 +99,7 @@
                         {% else %}
                             <span class="volume-status active">(Active)</span>
                             <div class="volume-created-at" style="font-weight: normal;">
-                                <i class="far fa-clock"></i> {{ volume.created_at }}
+                                <i class="far fa-clock"></i>Published on: {{ volume.created_at }}
                             </div>
                         {% endif %}
                         </a>

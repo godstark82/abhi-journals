@@ -211,3 +211,23 @@ document.addEventListener('click', function (e) {
         e.target.parentElement.style.display = 'none';
     }
 });
+
+// Reference toggle
+
+document.addEventListener('DOMContentLoaded', function() {
+    const toggle = document.querySelector('.references-toggle');
+    const content = document.getElementById('references-content');
+    const icon = document.getElementById('references-icon');
+
+    toggle.addEventListener('click', function() {
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        } else {
+            content.style.display = 'none';
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        }
+    });
+});

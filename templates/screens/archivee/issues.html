@@ -1,13 +1,45 @@
 {% extends "layout.html" %}
 {% block body %}
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         section {
-            margin: 20px;
-            padding: 20px;
+            margin: 10px;
+            padding: 15px;
             color: black;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+        }
+        .issue-status {
+            font-size: 0.8em;
+            padding: 2px 5px;
+            border-radius: 3px;
+            margin-left: 5px;
+            font-weight: bold;
+            display: inline-block;
+        }
+        .active {
+            color: #2ecc71;
+        }
+        .inactive {
+            color: #e74c3c;
+        }
+        .issue {
+            margin-bottom: 15px;
+        }
+        .issue p {
+            margin: 5px 0;
+        }
+        @media (max-width: 768px) {
+            section {
+                margin: 5px;
+                padding: 10px;
+            }
+            .issue-status {
+                display: block;
+                margin-left: 0;
+                margin-top: 5px;
+            }
         }
     </style>
     <title>Volume Issues</title>
@@ -17,10 +49,17 @@
         {% if issues %}
             {% for issue in issues %}
                 <div class="issue">
-                    <a href="{{ url_for('issue_details', subdomain=subdomain, issue_id=issue.id) }}">
-                        <p><strong>Issue-{{ issue.issue_number }}: {{ issue.title }}</strong></p>
-                        <p>From : {{ issue.from_date }}</p>
-                        <p>To : {{ issue.to_date }}</p>
+                    <a href="{{ url_for('issue_details', subdomain=subdomain, issue_id=issue.id) }}" style="color: black; text-decoration: none;">
+                        <p>
+                            <strong>Issue-{{ issue.issue_number }}: {{ issue.title }}</strong>
+                            {% if issue.is_active %}
+                                <span class="issue-status active">(Active)</span>
+                            {% else %}
+                                <span class="issue-status inactive">(Inactive)</span>
+                            {% endif %}
+                        </p>
+                        <p>From : {{ issue.from_date.strftime('%d-%m-%Y') }}</p>
+                        <p>To : {{ issue.to_date.strftime('%d-%m-%Y') }}</p>
                         <hr>
                     </a>
                 </div>

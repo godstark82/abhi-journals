@@ -15,7 +15,7 @@
                     style="object-fit: cover;">
                 <div class="overlay">
                     <div class="mb-2">
-                        <a class="text-white" href="{{ url_for('article_details', subdomain=subdomain, article_id=article.id) }}"><small>{{ article.created_at }}</small></a>
+                        <a class="text-white" href="{{ url_for('article_details', subdomain=subdomain, article_id=article.id) }}"><small>{{ article.created_at.strftime('%d-%m-%Y') }}</small></a>
                     </div>
                     <a class="h6 m-0 text-white text-uppercase font-weight-semi-bold" href="{{ url_for('article_details', subdomain=subdomain, article_id=article.id) }}">{{ article.title }}
                         </a>
@@ -27,12 +27,11 @@
 </div>
 <!-- Featured News Slider End -->
 
-
 <!-- News With Sidebar Start -->
 <div class="container-fluid">
     <div class="container">
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-8 col-md-12">
                 <div class="row">
                     <div class="col-12">
                         <div class="section-title">
@@ -40,14 +39,13 @@
                         </div>
                     </div>
 
-                    <div style="color: black;">
+                    <div class="col-12" style="color: black;">
                         {{ content | safe }}
                     </div>
-
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
                 <div class="mb-3">
                     <div class="section-title mb-0">
                         <h5 class="m-0 text-uppercase font-weight-bold">Publication Information</h5>
@@ -110,7 +108,6 @@
                         <p>No Editors found.</p>
                         {% endif %}
                         </p>
-
                     </div>
                 </div>
 
@@ -144,7 +141,6 @@
                 </div>
                 <!-- Quick Links End -->
 
-
                 <!-- Articles in Press Start -->
                 <div class="mb-3">
                     <div class="section-title mb-0">
@@ -167,35 +163,37 @@
                     </div>
                     <div class="bg-white border border-top-0 p-3">
                         <h6 class="m-0 text-uppercase font-weight-bold">Facts and Figures</h6>
-                        <table class="table table-bordered mt-3" style="color: #31404b;">
-                            <tbody>
-                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
-                                    onmouseout="this.style.backgroundColor=''">
-                                    <td>Issue Per Year</td>
-                                    <td>02</td>
-                                </tr>
-                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
-                                    onmouseout="this.style.backgroundColor=''">
-                                    <td>Number of Volumes</td>
-                                    <td>02</td>
-                                </tr>
-                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
-                                    onmouseout="this.style.backgroundColor=''">
-                                    <td>Number of Issues</td>
-                                    <td>01</td>
-                                </tr>
-                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
-                                    onmouseout="this.style.backgroundColor=''">
-                                    <td>Number of Articles</td>
-                                    <td>05</td>
-                                </tr>
-                                <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
-                                    onmouseout="this.style.backgroundColor=''">
-                                    <td>Number of Contributors</td>
-                                    <td>10</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-responsive mt-3">
+                            <table class="table table-bordered" style="color: #31404b;">
+                                <tbody>
+                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                        onmouseout="this.style.backgroundColor=''">
+                                        <td>Issue Per Year</td>
+                                        <td>02</td>
+                                    </tr>
+                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                        onmouseout="this.style.backgroundColor=''">
+                                        <td>Number of Volumes</td>
+                                        <td>02</td>
+                                    </tr>
+                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                        onmouseout="this.style.backgroundColor=''">
+                                        <td>Number of Issues</td>
+                                        <td>01</td>
+                                    </tr>
+                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                        onmouseout="this.style.backgroundColor=''">
+                                        <td>Number of Articles</td>
+                                        <td>05</td>
+                                    </tr>
+                                    <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
+                                        onmouseout="this.style.backgroundColor=''">
+                                        <td>Number of Contributors</td>
+                                        <td>10</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <!-- Table End -->
@@ -224,14 +222,26 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
-
+                <!-- General End -->
             </div>
-            <!-- General End -->
         </div>
     </div>
 </div>
-</div>
 <!-- News With Sidebar End -->
+
+<style>
+    @media (max-width: 767px) {
+        .news-carousel .position-relative {
+            height: 200px;
+        }
+        .section-title h4, .section-title h5 {
+            font-size: 1.2rem;
+        }
+        .table-responsive {
+            overflow-x: auto;
+        }
+    }
+</style>
+
 {% endblock %}

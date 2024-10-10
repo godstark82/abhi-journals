@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
+
 <head>
     <style>
         section {
@@ -8,37 +9,105 @@
             color: black;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            position: relative;
+        }
+        .article-image {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+        .download-btn {
+            display: block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
+            color: white;
+        }
+        .references-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        .references-content {
+            display: none;
+            margin-left: 20px;
+            text-align: justify;
+        }
+        @media (max-width: 767px) {
+            .mobile-order {
+                display: flex;
+                flex-direction: column;
+            }
+            .mobile-order .article-content {
+                order: 1;
+            }
+            .mobile-order .article-image-container {
+                order: 2;
+            }
+        }
+        @media (min-width: 768px) {
+            .article-image {
+                float: right;
+                max-width: 25%;
+                margin-left: 20px;
+            }
+            .download-btn {
+                width: 25%;
+                float: right;
+                clear: right;
+            }
+            .references-content {
+                margin-left: 40px;
+            }
         }
     </style>
-<title>Article Details</title>
+    <title>Article Details</title>
 </head>
+
 <body>
-    <section>
-        <div class="article-container">
-            {% if article.image_url %}
-            <div class="article-image-container">
-                <img src="{{ article.image_url }}" alt="{{ article.title }}" class="article-image">
-            </div>
+    <section class="mobile-order">
+        <div class="article-image-container">
+            <img src="{{ article.image }}" alt="Article Image" class="article-image">
+            <a href="{{ article.pdf }}" class="download-btn" download>
+                <i class="fas fa-file-pdf"></i> Download as PDF
+            </a>
+        </div>
+
+        <div class="article-content">
+            <h4 style="color: black;">{{ article.title }}</h4>
+            <p><strong>Document Type:</strong> {{ article.document_type }}</p>
+            {% if article.authors %}
+            <p><strong>Authors:</strong>
+                {% for author in article.authors %}
+                {{ author.name }}{% if not loop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+            {% else %}
+            <p><strong>Authors:</strong> Not specified</p>
             {% endif %}
-            <div class="article-content">
-                <h2>{{ article.title }}</h2>
-                <p class="article-authors">{{ article.authors }}</p>
-                <p><strong>Abstract:</strong> {{ article.abstract }}</p>
-                <div class="article-meta">
-                    <p><strong>Keywords:</strong> {{ article.keywords }}</p>
-                    <p><strong>Published:</strong> {{ article.publication_date }}</p>
-                    <p><strong>DOI:</strong> {{ article.doi }}</p>
-                </div>
-                {% if article.pdf_url %}
-                <a href="{{ article.pdf_url }}" class="btn btn-primary pdf-button" target="_blank">
-                    <i class="fas fa-file-pdf pdf-icon"></i>
-                    <span class="pdf-text-normal">Download </span>
-                    <span class="pdf-text-bold">PDF</span>
-                </a>
-                {% endif %}
+            <p><strong>Abstract:</strong></p>
+            <p style="margin-left: 20px; text-align: justify;">{{ article.abstract_string }}</p>
+            <p><strong>Keywords:</strong> {{ article.keywords | join(', ') }}</p>
+            <p><strong>Main Subjects:</strong> {{ article.main_subjects | join(', ') }}</p>
+            <p class="references-toggle">
+                <strong>References</strong>
+                <i class="fas fa-chevron-down" id="references-icon"></i>
+            </p>
+            <div class="references-content" id="references-content">
+                {{ article.references | join(', ') }}
             </div>
         </div>
     </section>
+
 </body>
 
 {% endblock %}
