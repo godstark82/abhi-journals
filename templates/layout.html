@@ -75,8 +75,8 @@
                 <a href="/" class="navbar-brand p-0 d-none d-lg-block">
                     <div class="heading-text">
                         <h6>
-                            <span style="font-size: 1.2em; font-weight: bold;">{{ ' '.join(journal.title.split()[:5]) }}</span><br>
-                            <span style="font-weight: bold;">{{ ' '.join(journal.title.split()[5:]) }}</span>
+                            <span style="font-size: 1.2em; font-weight: bold;">{{ ' '.join(journal.title.split()[:4]) }}</span><br>
+                            <span style="font-weight: bold;">{{ ' '.join(journal.title.split()[4:]) }}</span>
                         </h6>
                     </div>
                 </a>
@@ -96,10 +96,15 @@
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-2 py-lg-0 px-lg-5">
             <a href="/" class="navbar-brand d-block d-lg-none">
                 <div class="heading-text">
-                    <h6 class=" ">{{ journal.title }}</h6>
+                    <h6>
+                        <span style="font-size: 1.2em; font-weight: bold;color: white;">{{ ' '.join(journal.title.split()[:3]) }}</span><br>
+                        <span style="font-weight: bold;color: white;">{{ ' '.join(journal.title.split()[3:6]) }}</span><br>
+                        <span style="font-weight: bold;color: white;">{{ ' '.join(journal.title.split()[6:]) }}</span>
+
+                    </h6>
                 </div>
             </a>
-            <a href="https://admin.abhijournals.com/" class="btn px-3 d-block d-lg-none"
+            <a href="https://admin.abhijournals.com/" target="_blank" class="btn px-3 d-block d-lg-none"
                 style="background-color: #033e93; color: white; border-radius: 5px; margin-right: 1px;">
                 Login
             </a>

@@ -1,5 +1,5 @@
 from typing import List, Optional
-from flask import Flask, render_template, jsonify, request, redirect, url_for, flash
+from flask import Flask, g, render_template, jsonify, request, redirect, url_for, flash
 from db_instance import get_db
 from models.editorial_board_model import EditorialRole
 from models.journal_model import JournalModel
@@ -24,7 +24,7 @@ db = get_db()
 all_journals = journal_service.get_all_journals()
 journal: JournalModel = None
 
-def get_journal(all_journals: List[JournalModel], subdomain: str = "main")-> Optional[JournalModel]:
+def get_journal(all_journals: List[JournalModel], subdomain: str = "main") -> Optional[JournalModel]:
     journal = None
     for journalItem in all_journals:
         if journalItem.domain == subdomain:
@@ -36,6 +36,10 @@ def get_journal(all_journals: List[JournalModel], subdomain: str = "main")-> Opt
     journal_details = journal_service.get_journal(journal.id)
     return journal_details
 
+def load_journal(subdomain):
+    if not hasattr(g, 'journal'):
+        g.journal = get_journal(all_journals, subdomain)
+    return g.journal
 
 
 # Add a route for the root domain
@@ -47,9 +51,7 @@ def root_home():
 @app.route(Routes.HOME, subdomain='<subdomain>')
 def Home(subdomain):
     # Attempt to find the corresponding journal for the subdomai
-    journal = get_journal(all_journals, subdomain)
-
-    currentsubdomain = subdomain
+    journal = load_journal(subdomain)
 
     # Fetch the content for the home page
     doc_id = "8061MAE63evqpTPdIvlz"
@@ -75,7 +77,7 @@ def Home(subdomain):
         chief_editor_name=chief_editor_names,
         associate_editors=associate_editors_list,
         journal=journal,
-        subdomain=currentsubdomain
+        subdomain=subdomain
     )
 
 
@@ -84,7 +86,7 @@ def Home(subdomain):
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
 def currissue(subdomain):
     # Find the journal that matches the subdomain
-    journal = get_journal(all_journals, subdomain = subdomain,)
+    journal = load_journal(subdomain)
     error_message = None
 
     # Fetch active volumes for the current journal
@@ -105,36 +107,32 @@ def currissue(subdomain):
     
     # Extract titles from articles
 
-    return render_template(Paths.CURRENT_ISSUE, articles=articles, error_message=error_message, journal = journal)
+    return render_template(Paths.CURRENT_ISSUE, articles=articles, error_message=error_message, journal = journal, subdomain=subdomain  )
 
 
 @app.route(Routes.BY_ISSUE, subdomain='<subdomain>')
 def byissue(subdomain):
     # Find the journal that matches the subdomain
-    journal = get_journal(all_journals, subdomain)
+    journal = load_journal(subdomain)
     if not journal.volumes:
         # If there are no volumes, return an empty list of issues
-        return render_template(Paths.BY_ISSUE, issues=[], error_message="No issues found for this journal.", journal = journal)
+        return render_template(Paths.BY_ISSUE, issues=[], error_message="No issues found for this journal.", journal = journal, subdomain=subdomain)
 
     try:    
         issues = journal.get_all_issues()
         # Sort issues by issueNumber in descending order
         issues.sort(key=lambda x: x.issue_number, reverse=True)     
-        return render_template(Paths.BY_ISSUE, issues=issues, error_message=None, journal=journal)
+        return render_template(Paths.BY_ISSUE, issues=issues, error_message=None, journal=journal, subdomain=subdomain)
     
     except InvalidArgument:
         # Handle the case where there are no issues
-        return render_template(Paths.BY_ISSUE, issues=[], journal = journal, error_message="No issues found for this journal.")
+        return render_template(Paths.BY_ISSUE, issues=[], journal = journal, error_message="No issues found for this journal.", subdomain=subdomain)
 
 @app.route(Routes.ARCHIVE, subdomain='<subdomain>')
 def archive(subdomain): 
     # Find the journal that matches the subdomain
-    for journalItem in all_journals:
-        if journalItem.domain == subdomain:
-            journal = journalItem
-            break
+    journal = load_journal(subdomain)
 
-    journal = journal_service.get_journal(journal.id)
     journal.volumes.sort(key=lambda x: x.volume_number, reverse=True)
 
     if not journal.volumes:
@@ -142,102 +140,113 @@ def archive(subdomain):
     else:
         error_message = None
     # Pass all volumes to the template
-    return render_template(Paths.ARCHIVE, journal=journal, error_message=error_message )
+    return render_template(Paths.ARCHIVE, journal=journal, error_message=error_message, subdomain=subdomain )
 
 @app.route(Routes.ISSUE_DETAILS + '/<issue_id>/articles/' , subdomain='<subdomain>')
 def issue_details(subdomain, issue_id):
-    journal = get_journal(all_journals, subdomain)
+    journal = load_journal(subdomain)
     articles = journal.get_all_articles_of_issue(issue_id)
-    return render_template(Paths.ISSUE_DETAILS, articles=articles, journal=journal)
+    return render_template(Paths.ISSUE_DETAILS, articles=articles, journal=journal, subdomain= subdomain)
 
 
 @app.route(Routes.ARTICLE_DETAILS + '/<article_id>', subdomain='<subdomain>')
 def article_details(subdomain, article_id):
-    journal = get_journal(all_journals, subdomain)
+    journal = load_journal(subdomain)
     article = journal.get_article_by_id(article_id)
-    return render_template(Paths.ARTICLE_DETAILS, journal=journal, article=article)
+    return render_template(Paths.ARTICLE_DETAILS, journal=journal, article=article, subdomain=subdomain)
 
 
 # New route to handle issues for a specific volume
 @app.route('/volume/<volume_id>/issues', subdomain='<subdomain>')
 def volume_issues(subdomain, volume_id):
     # Fetch the issues for the volume that contain articles
-    journal = get_journal(all_journals, subdomain)
+    journal = load_journal(subdomain)
     issues = journal.get_all_issues_of_volume(volume_id)
     if not issues:
         return render_template(Paths.VOLUME_ISSUES, issues=[], error_message="No issues with articles found for this volume.")
     # return volume_id
-    return render_template(Paths.VOLUME_ISSUES, issues=issues, journal=journal)
+    return render_template(Paths.VOLUME_ISSUES, issues=issues, journal=journal, subdomain=subdomain)
 
 
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
 def about_journal(subdomain):
+    journal = load_journal(subdomain)
     doc_id = "s7zN7Ce9XCsEOP63CtUb"
     return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page(doc_id), journal = journal)
 
 @app.route(Routes.AIM_AND_SCOPE, subdomain='<subdomain>')
 def aimnscope(subdomain):
+    journal = load_journal(subdomain)
     doc_id = "w45mTbOFFg54c7HSU4Ay"    
     return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page(doc_id), journal = journal)
     
 @app.route(Routes.EDITORIAL_BOARD, subdomain='<subdomain>')
 def editboard(subdomain):
+    journal = load_journal(subdomain)
     eb_members = editorial_service.get_all_editorial_board_members()
     return render_template(Paths.EDITORIAL_BOARD, board_members=eb_members, journal = journal)
 
 @app.route(Routes.PUBLICATION_ETHICS, subdomain='<subdomain>')
 def pubethics(subdomain):
+    journal = load_journal(subdomain)
     doc_id = "W6bSKPFmVh6ejZMVxsWr"
     return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page(doc_id), journal = journal)
 
     
 @app.route(Routes.PEER_REVIEW_PROCESS, subdomain='<subdomain>')
 def peerpro(subdomain):
-
+    journal = load_journal(subdomain)
     doc_id = "CZpNkvbYXi0Ae5RQASJp"
     return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page(doc_id), journal = journal)
     
 
 @app.route(Routes.INDEXING_AND_ABSTRACTING, subdomain='<subdomain>')
 def indnabs(subdomain):
+    journal = load_journal(subdomain)
     return render_template(Paths.INDEXING_AND_ABSTRACTING, journal = journal)
 
 @app.route(Routes.SUBMIT_ONLINE_PAPER, subdomain='<subdomain>')
 def subon(subdomain):
+    journal = load_journal(subdomain)
     return render_template(Paths.SUBMIT_ONLINE_PAPER, journal = journal)
 
 @app.route(Routes.TOPICS, subdomain='<subdomain>')
 def topic(subdomain):
+    journal = load_journal(subdomain)
     doc_id = "QoxjARRGKlL7BKUtcpQM"
     return render_template(Paths.TOPICS, content=page_service.get_page(doc_id), journal = journal)
 
 @app.route(Routes.AUTHOR_GUIDELINES, subdomain='<subdomain>')
 def authgl(subdomain):
-
+    journal = load_journal(subdomain)
     doc_id = "4OJKeKoJ3LStfoEU88Hu"
     return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page(doc_id), journal = journal)
 
 @app.route(Routes.COPYRIGHT_FORM, subdomain='<subdomain>')
 def crform(subdomain):
+    journal = load_journal(subdomain)
     return render_template(Paths.COPYRIGHT_FORM, journal = journal)
 @app.route(Routes.CHECK_PAPER_STATUS, subdomain='<subdomain>')
 def checkpapstat(subdomain):
+    journal = load_journal(subdomain)
     return render_template(Paths.CHECK_PAPER_STATUS, journal = journal)
 @app.route(Routes.MEMBERSHIP, subdomain='<subdomain>')
 def mship(subdomain):
+    journal = load_journal(subdomain)
     return render_template(Paths.MEMBERSHIP, journal = journal)
 @app.route(Routes.SUBMIT_MANUSCRIPT, subdomain='<subdomain>')
 def submitmanscr(subdomain):
+    journal = load_journal(subdomain)
     return render_template(Paths.SUBMIT_MANUSCRIPT, journal = journal)
 @app.route(Routes.REVIEWER, subdomain='<subdomain>')
 def reviewer(subdomain):
-
+    journal = load_journal(subdomain)
     doc_id = "GiZuANsNXJTxZdt8jQbR"
     return render_template(Paths.REVIEWER, content=page_service.get_page(doc_id), journal = journal)
 
 @app.route(Routes.CONTACT, subdomain='<subdomain>', methods=['GET', 'POST'])
 def ContactUs(subdomain):    
-
+    journal = load_journal(subdomain)
     doc_id = "ylhdV31SBbX3exH9olKj"
     content = page_service.get_page(doc_id)
     
@@ -253,13 +262,14 @@ def ContactUs(subdomain):
         mail_service.send_email(name, email, phone, subject, questiontype, message)
 
         flash('Your message has been successfully submitted!', 'success')
-        return redirect(url_for('ContactUs'))
+        return redirect(url_for('ContactUs', subdomain=subdomain))
     
-    return render_template(Paths.CONTACT, content=content, journal = journal)
+    return render_template(Paths.CONTACT, content=content, journal = journal, subdomain=subdomain)
 
 
 @app.route(Routes.GET_SOCIAL_LINKS, subdomain='<subdomain>')
 def get_social_links(subdomain):
+    journal = load_journal(subdomain)
     return social_link_service.get_social_links()
 
 
