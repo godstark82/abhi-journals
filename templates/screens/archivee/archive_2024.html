@@ -93,15 +93,12 @@
                         Volume {{ volume.volume_number }}: {{ volume.title }}
                         {% if not volume.is_active %}
                             <span class="volume-status inactive">(Inactive)</span>
-                            <div class="volume-created-at" style="font-weight: normal;">
-                                <i class="far fa-clock"></i>Published on: {{ volume.created_at }}
-                            </div>
                         {% else %}
                             <span class="volume-status active">(Active)</span>
-                            <div class="volume-created-at" style="font-weight: normal;">
-                                <i class="far fa-clock"></i>Published on: {{ volume.created_at }}
-                            </div>
                         {% endif %}
+                        <div class="volume-created-at" style="font-weight: normal;">
+                            <i class="far fa-clock"></i>Published on: {{ volume.created_at }}
+                        </div>
                         </a>
                     </div>  
                     <hr>

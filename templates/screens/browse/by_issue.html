@@ -88,6 +88,8 @@
                     <span class="issue-status active">(Active)</span>
                 {% endif %}
             </div>
+            <p>From : {{ issue.from_date.strftime('%d-%m-%Y') }}</p>
+            <p>To : {{ issue.to_date.strftime('%d-%m-%Y') }}</p>
             </a>
         </div>
         {% endfor %}

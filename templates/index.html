@@ -118,19 +118,19 @@
                     </div>
                     <div class="bg-white border border-top-0 p-3">
                         <div class="d-flex flex-column">
-                            <a href="#" class="mb-2" style="color: #000000; text-decoration: none;"
+                            <a href="/publication_ethics.html" class="mb-2" style="color: #000000; text-decoration: none;"
                                 onmouseover="this.style.color='#033e93'" onmouseout="this.style.color='#000000'"><i
                                     class="fas fa-link mr-2"></i>Publication Ethics</a>
-                            <a href="#" class="mb-2" style="color: #000000; text-decoration: none;"
+                            <a href="/editorial_board.html" class="mb-2" style="color: #000000; text-decoration: none;"
                                 onmouseover="this.style.color='#033e93'" onmouseout="this.style.color='#000000'"><i
                                     class="fas fa-link mr-2"></i>Editorial Board</a>
-                            <a href="#" class="mb-2" style="color: #000000; text-decoration: none;"
+                            <a href="/archive_2024.html" class="mb-2" style="color: #000000; text-decoration: none;"
                                 onmouseover="this.style.color='#033e93'" onmouseout="this.style.color='#000000'"><i
                                     class="fas fa-link mr-2"></i>Archives</a>
-                            <a href="#" class="mb-2" style="color: #000000; text-decoration: none;"
+                            <a href="/author_gl.html" class="mb-2" style="color: #000000; text-decoration: none;"
                                 onmouseover="this.style.color='#033e93'" onmouseout="this.style.color='#000000'"><i
                                     class="fas fa-link mr-2"></i>Author Guidelines</a>
-                            <a href="#" class="mb-2" style="color: #000000; text-decoration: none;"
+                            <a href="/peerrevpro.html" class="mb-2" style="color: #000000; text-decoration: none;"
                                 onmouseover="this.style.color='#033e93'" onmouseout="this.style.color='#000000'"><i
                                     class="fas fa-link mr-2"></i>Reviewer Guidelines</a>
                             <a href="#" class="mb-2" style="color: #000000; text-decoration: none;"
@@ -174,12 +174,12 @@
                                     <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
                                         onmouseout="this.style.backgroundColor=''">
                                         <td>Number of Volumes</td>
-                                        <td>02</td>
+                                        <td>{{ journal.volumes|length }}</td>
                                     </tr>
                                     <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
                                         onmouseout="this.style.backgroundColor=''">
                                         <td>Number of Issues</td>
-                                        <td>01</td>
+                                        <td>{{ journal.get_all_issues()|length }}</td>
                                     </tr>
                                     <tr onmouseover="this.style.backgroundColor='#e6f2ff'"
                                         onmouseout="this.style.backgroundColor=''">
