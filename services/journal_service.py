@@ -19,6 +19,17 @@ def get_articles_issue(issue_id) -> list[ArticleModel]:
         article_models.append(model)
     return article_models
 
+def get_all_volumes_count():
+    volumes = db.collection('volumes').get()
+    return len(volumes)
+
+def get_all_issues_count():
+    issues = db.collection('issues').get()
+    return len(issues)
+
+def get_all_articles_count():
+    articles = db.collection('articles').get()
+    return len(articles)
 
 #! Issue
 def get_issues_volume(volume_id) -> list[IssueModel]:

@@ -45,7 +45,12 @@ def load_journal(subdomain):
 # Add a route for the root domain
 @app.route(Routes.HOME)
 def root_home():
-    return redirect(url_for('Home', subdomain='main'))
+    journal = load_journal("main")
+    volumes_count = journal_service.get_all_volumes_count()
+    issues_count = journal_service.get_all_issues_count()
+    articles_count = journal_service.get_all_articles_count()
+    users_count = user_service.get_all_users_count()
+    return render_template('home/index.html', journal=journal, all_journals=all_journals, volumes_count=volumes_count, issues_count=issues_count, articles_count=articles_count, users_count=users_count)
 
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
