@@ -79,7 +79,7 @@ def Home(subdomain):
     # Fetch the content for the home page
     content = page_service.get_page('Home', journal.id)
     # Fetch editorial board members
-    all_editorial_board_members = editorial_service.get_all_editorial_board_members()
+    all_editorial_board_members = editorial_service.get_all_editorial_board_members(journal.id)
     editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
     associate_editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.ASSOCIATE_EDITOR]
     chief_editor_names = [member.name for member in all_editorial_board_members if member.role == EditorialRole.CHIEF_EDITOR]

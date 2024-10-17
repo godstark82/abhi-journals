@@ -3,9 +3,9 @@ from firebase_admin import firestore
 from models.editorial_board_model import EditorialBoardMember
 from db_instance import get_db
 
-def get_all_editorial_board_members() -> List[EditorialBoardMember]:
+def get_all_editorial_board_members(journal_id) -> List[EditorialBoardMember]:
     db = get_db()
-    editorial_board_ref = db.collection('editorialBoard')
+    editorial_board_ref = db.collection('editorialBoard').where('journalId', '==', journal_id)
     editorial_board_docs = editorial_board_ref.stream()
 
     editorial_board_members = []
