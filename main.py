@@ -8,6 +8,7 @@ from routes import Routes
 from paths import Paths
 from waitress import serve
 from google.api_core.exceptions import InvalidArgument
+from services.mail_service import send_email
 
 
 
@@ -52,16 +53,31 @@ def root_home():
     users_count = user_service.get_all_users_count()
     return render_template('home/index.html', journal=journal, all_journals=all_journals, volumes_count=volumes_count, issues_count=issues_count, articles_count=articles_count, users_count=users_count)
 
+@app.route(Routes.CONTACT, methods=['GET', 'POST'])
+def contact():
+    if request.method == 'POST':
+        name = request.form.get("name")
+        email = request.form.get("email")
+        subject = request.form.get("subject")
+        message = request.form.get("message")
+
+        # Optionally add phone and questiontype if needed
+
+        # Send the email using the send_email function from mail_service
+        send_email(name, email, None, subject, None, message)
+
+        flash('Your message has been successfully submitted!', 'success')
+        return redirect(url_for('contact'))
+
+    return render_template(Paths.INDEX)
+
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
 def Home(subdomain):
-    # Attempt to find the corresponding journal for the subdomai
+    # Attempt to find the corresponding journal for the subdomain
     journal = load_journal(subdomain)
-
     # Fetch the content for the home page
-    doc_id = "8061MAE63evqpTPdIvlz"
-    content = page_service.get_page(doc_id)
-
+    content = page_service.get_page('Home', journal.id)
     # Fetch editorial board members
     all_editorial_board_members = editorial_service.get_all_editorial_board_members()
     editors_list = [member.name for member in all_editorial_board_members if member.role == EditorialRole.EDITOR]
@@ -87,7 +103,6 @@ def Home(subdomain):
 
 
 
-
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
 def currissue(subdomain):
     # Find the journal that matches the subdomain
@@ -96,14 +111,11 @@ def currissue(subdomain):
 
     # Fetch active volumes for the current journal
     active_volume_ids = [vol.id for vol in journal.get_all_active_volumes()]
-
     if not active_volume_ids:
         error_message = "No active volumes found for this journal"
     
     # Fetch active issue IDs based on active volumes for the current journal
-   
     active_issue_ids = [issue.id for issue in journal.get_all_active_issues()]
-
     if not active_issue_ids:
         error_message = "No active issues found for this journal"
 
@@ -111,7 +123,6 @@ def currissue(subdomain):
     articles = journal.get_all_artcles_of_active_issues()
     
     # Extract titles from articles
-
     return render_template(Paths.CURRENT_ISSUE, articles=articles, error_message=error_message, journal = journal, subdomain=subdomain  )
 
 
@@ -176,14 +187,12 @@ def volume_issues(subdomain, volume_id):
 @app.route(Routes.ABOUT_JOURNAL, subdomain='<subdomain>')
 def about_journal(subdomain):
     journal = load_journal(subdomain)
-    doc_id = "s7zN7Ce9XCsEOP63CtUb"
-    return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page(doc_id), journal = journal)
+    return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page('About Journal',journal.id), journal = journal)
 
 @app.route(Routes.AIM_AND_SCOPE, subdomain='<subdomain>')
 def aimnscope(subdomain):
     journal = load_journal(subdomain)
-    doc_id = "w45mTbOFFg54c7HSU4Ay"    
-    return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page(doc_id), journal = journal)
+    return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page('Aim and Scope', journal.id), journal = journal)
     
 @app.route(Routes.EDITORIAL_BOARD, subdomain='<subdomain>')
 def editboard(subdomain):
@@ -194,15 +203,13 @@ def editboard(subdomain):
 @app.route(Routes.PUBLICATION_ETHICS, subdomain='<subdomain>')
 def pubethics(subdomain):
     journal = load_journal(subdomain)
-    doc_id = "W6bSKPFmVh6ejZMVxsWr"
-    return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page(doc_id), journal = journal)
+    return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page('Publication Ethics',journal.id), journal = journal)
 
     
 @app.route(Routes.PEER_REVIEW_PROCESS, subdomain='<subdomain>')
 def peerpro(subdomain):
     journal = load_journal(subdomain)
-    doc_id = "CZpNkvbYXi0Ae5RQASJp"
-    return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page(doc_id), journal = journal)
+    return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page('Peer Review Process',journal.id), journal = journal)
     
 
 @app.route(Routes.INDEXING_AND_ABSTRACTING, subdomain='<subdomain>')
@@ -218,14 +225,12 @@ def subon(subdomain):
 @app.route(Routes.TOPICS, subdomain='<subdomain>')
 def topic(subdomain):
     journal = load_journal(subdomain)
-    doc_id = "QoxjARRGKlL7BKUtcpQM"
-    return render_template(Paths.TOPICS, content=page_service.get_page(doc_id), journal = journal)
+    return render_template(Paths.TOPICS, content=page_service.get_page('Topics',journal.id), journal = journal)
 
 @app.route(Routes.AUTHOR_GUIDELINES, subdomain='<subdomain>')
 def authgl(subdomain):
     journal = load_journal(subdomain)
-    doc_id = "4OJKeKoJ3LStfoEU88Hu"
-    return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page(doc_id), journal = journal)
+    return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page('Author Guidelines',journal.id), journal = journal)
 
 @app.route(Routes.COPYRIGHT_FORM, subdomain='<subdomain>')
 def crform(subdomain):
@@ -246,14 +251,12 @@ def submitmanscr(subdomain):
 @app.route(Routes.REVIEWER, subdomain='<subdomain>')
 def reviewer(subdomain):
     journal = load_journal(subdomain)
-    doc_id = "GiZuANsNXJTxZdt8jQbR"
-    return render_template(Paths.REVIEWER, content=page_service.get_page(doc_id), journal = journal)
+    return render_template(Paths.REVIEWER, content=page_service.get_page('Reviewer',journal.id), journal = journal)
 
 @app.route(Routes.CONTACT, subdomain='<subdomain>', methods=['GET', 'POST'])
 def ContactUs(subdomain):    
     journal = load_journal(subdomain)
-    doc_id = "ylhdV31SBbX3exH9olKj"
-    content = page_service.get_page(doc_id)
+    content = page_service.get_page('Contact Us',journal.id)
     
     if request.method == 'POST':
         name = request.form.get("name")
