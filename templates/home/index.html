@@ -9,8 +9,8 @@
   <meta name="keywords" content="">
 
   <!-- Favicons -->
-  <link href="{{ url_for('static', filename='img/favicon.png') }}" rel="icon">
-  <link href="{{ url_for('static', filename='img/apple-touch-icon.png') }}" rel="apple-touch-icon">
+  <link href="{{ url_for('static', filename='img/logo.png') }}" rel="icon">
+  <link href="{{ url_for('static', filename='img/logo.png') }}" rel="apple-touch-icon">
 
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -36,7 +36,7 @@
 
       <a class="logo d-flex align-items-center me-auto">
         <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="{{ url_for('static', filename='img/logo.png') }}" alt=""> -->
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="">
         <h1 class="sitename">Abhi Journals</h1>
       </a>
 
@@ -125,7 +125,7 @@
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>About Us<br></h2>
-        <p>Welcome to JANOLI International Journal</p>
+        <p>Welcome to ABHI International Journal</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -377,7 +377,7 @@
           <div class="row gy-4 isotope-container" data-aos="fade-up" data-aos-delay="200">
             {% for journal in all_journals %}
             <div class="col-lg-4 col-md-6 portfolio-item isotope-item filter-app">
-              <img src="https://janolijournals.org/uploads/images/interest-3.svg" class="img-fluid" alt="">
+              <img src="{{ url_for('static', filename='img/ypt.png/') }}" class="img-fluid" alt="">
               <div class="portfolio-info">
                 <a href="https://{{ journal.domain}}.abhijournals.com" target="_blank">
                   <h4>{{ journal.title }}</h4>

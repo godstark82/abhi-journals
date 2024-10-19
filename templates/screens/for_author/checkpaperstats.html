@@ -1,6 +1,62 @@
 {% extends "layout.html" %}
 {% block body %}
-<title>Check Paper Status</title>
+<head>
+    <style>
+        section {
+            margin: 20px;
+            padding: 20px;
+            color: black;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            background-color: #cfe2ff;
+            cursor: pointer;
+        }
+        .track-paper {
+            margin: 20px auto;
+            padding: 20px;
+            font-weight: bold;
+            border: 1px solid #ddd;
+            max-width: 500px;
+            color: black;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .track-paper h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+        .track-paper input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+        }
+        .track-paper button {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+    <title>Check Paper Status</title>
+</head>
+<body>
+    <section onclick="window.location.href='#';">
+        Enter Your Paper ID and track paper using this make payment, download certificate and paper
+    </section>
 
+    <div class="track-paper">
+        <h2>📄 Track Your Paper</h2>
+        <form>
+            <label for="registration-id">Use Six Digit Registration ID</label>
+            <input type="text" id="registration-id" name="registration-id" required>
+            <button type="submit">Track</button>
+        </form>
+    </div>
+    
+</body>
 
 {% endblock %} 

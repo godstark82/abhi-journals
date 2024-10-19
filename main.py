@@ -16,7 +16,7 @@ from services.mail_service import send_email
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
 # app.config['SERVER_NAME'] = 'abhijournals.com'
-app.config['SERVER_NAME'] = 'abhijournals.com'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 db = get_db()
 
