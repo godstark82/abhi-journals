@@ -1,5 +1,5 @@
 from typing import List, Optional
-from flask import Flask, g, render_template, jsonify, request, redirect, url_for, flash
+from flask import Flask, g, render_template, request, redirect, url_for, flash
 from db_instance import get_db
 from models.editorial_board_model import EditorialRole
 from models.journal_model import JournalModel
@@ -15,8 +15,8 @@ from services.mail_service import send_email
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-app.config['SERVER_NAME'] = 'abhijournals.com'
-# app.config['SERVER_NAME'] = 'localhost:5000'
+# app.config['SERVER_NAME'] = 'abhijournals.com'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 db = get_db()
 
