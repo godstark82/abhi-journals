@@ -294,7 +294,7 @@ def get_social_links(subdomain):
 
 
 
-mode = "dev"
+mode = "prod"
 
 if __name__ == "__main__":
     # Comment this out when freezing
