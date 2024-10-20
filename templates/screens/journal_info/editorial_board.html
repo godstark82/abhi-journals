@@ -74,7 +74,7 @@
     <div class="main-content">
         {% for member in board_members %}
         <div class="editor-card">
-            <h3>{{ member.role }}</h3>
+            <h3>{{ member.role.value }}</h3>
             <div class="card-content">
                 <div class="editor-details">
                     <p><strong>{{ member.name }}</strong></p>

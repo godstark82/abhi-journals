@@ -91,7 +91,7 @@
                     <h4 class="m-0 text-uppercase font-weight-bold">Contact Us</h4>
                 </div>
                 <div class="bg-white border border-top-0 p-4 mb-3">
-                    <form action="/contact.html" method="post">
+                    <form action="{{ url_for('contact_us', subdomain=journal.domain) }}" method="post">
                         <div class="form-row">
                             <div class="col-md-6 col-sm-12">
                                 <div class="form-group">

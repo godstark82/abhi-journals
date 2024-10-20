@@ -77,3 +77,11 @@ def get_journal(journal_id) -> JournalModel:
     else:
         return None
     
+def get_article_by_id(article_id) -> ArticleModel:
+    article = db.collection('articles').document(article_id).get()
+    if article.exists:
+        data = article.to_dict()
+        model = ArticleModel.from_json(json.dumps(data))
+        return model
+    else:
+        return None

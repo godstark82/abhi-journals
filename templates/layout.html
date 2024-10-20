@@ -34,7 +34,7 @@
                             <a class="nav-link text-body small" href="#" id="current_date">Loading date...</a>
                         </li>
                         <li class="nav-item border-right border-secondary">
-                            <a class="nav-link text-body small" href="/contact.html">Contact</a>
+                            <a class="nav-link text-body small" href="{{ url_for('contact_us', subdomain=journal.subdomain) }}">Contact</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-body small" href="https://admin.abhijournals.com/"
@@ -72,7 +72,7 @@
         </div>
         <div class="row align-items-center bg-white py-3 px-lg-5">
             <div class="col-lg-4">
-                <a href="/" class="navbar-brand p-0 d-none d-lg-block">
+                <a href="{{ url_for('home', subdomain=journal.domain) }}" class="navbar-brand p-0 d-none d-lg-block">
                     <div class="heading-text">
                         <h6>
                             <span style="font-size: 1.2em; font-weight: bold;">{{ ' '.join(journal.title.split()[:4]) }}</span><br>
@@ -94,7 +94,7 @@
     <!-- Navbar Start -->
     <div class="container-fluid p-0">
         <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-2 py-lg-0 px-lg-5">
-            <a href="/" class="navbar-brand d-block d-lg-none">
+            <a href="{{ url_for('home', subdomain=journal.domain) }}" class="navbar-brand d-block d-lg-none">
                 <div class="heading-text">
                     <h6>
                         <span style="font-size: 1.2em; font-weight: bold;color: white;">{{ ' '.join(journal.title.split()[:3]) }}</span><br>
@@ -114,48 +114,48 @@
             <div class="collapse navbar-collapse justify-content-center px-0 px-lg-3" id="navbarCollapse">
                 <div class="navbar-nav mx-auto py-0">
                     <div class="nav-item dropdown">
-                        <a href="/" class="nav-link dropdown-toggle" data-toggle="dropdown">Browse</a>
+                        <a href="{{ url_for('current_issue', subdomain=journal.domain) }}" class="nav-link dropdown-toggle" data-toggle="dropdown">Browse</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <a href="/current_issue.html" class="dropdown-item">Current Issue</a>
-                            <a href="/by_issue.html" class="dropdown-item">By Issue</a>
+                            <a href="{{ url_for('current_issue', subdomain=journal.domain) }}" class="dropdown-item">Current Issue</a>
+                            <a href="{{ url_for('by_issue', subdomain=journal.domain) }}" class="dropdown-item">By Issue</a>
                         </div>
                     </div>
 
                     <div class="nav-item dropdown">
-                        <a href="/archive.html" class="nav-link dropdown-toggle" data-toggle="dropdown">Archive</a>
+                        <a href="{{ url_for('archive', subdomain=journal.domain) }}" class="nav-link dropdown-toggle" data-toggle="dropdown">Archive</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <a href="/archive_2024.html" class="dropdown-item">Archive 2024</a>
+                            <a href="{{ url_for('archive', subdomain=journal.domain) }}" class="dropdown-item">Archive 2024</a>
                         </div>
                     </div>
 
                     <div class="nav-item dropdown">
-                        <a href="/journal_info.html" class="nav-link dropdown-toggle" data-toggle="dropdown">Journal
+                        <a href="{{ url_for('about_journal', subdomain=journal.domain) }}" class="nav-link dropdown-toggle" data-toggle="dropdown">Journal
                             Info</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <a href="/about_jrnl.html" class="dropdown-item">About Journal</a>
-                            <a href="/aimandscope.html" class="dropdown-item">Aim and Scope</a>
-                            <a href="/editorial_board.html" class="dropdown-item">Editorial Board</a>
-                            <a href="/publication_ethics.html" class="dropdown-item">Publication Ethics</a>
-                            <a href="/indandabs.html" class="dropdown-item">Indexing And Abstracting</a>
-                            <a href="/peerrevpro.html" class="dropdown-item">Peer Review Process</a>
+                            <a href="{{ url_for('about_journal', subdomain=journal.domain) }}" class="dropdown-item">About Journal</a>
+                            <a href="{{ url_for('aim_and_scope', subdomain=journal.domain) }}" class="dropdown-item">Aim and Scope</a>
+                            <a href="{{ url_for('editorial_board', subdomain=journal.domain) }}" class="dropdown-item">Editorial Board</a>
+                            <a href="{{ url_for('publication_ethics', subdomain=journal.domain) }}" class="dropdown-item">Publication Ethics</a>
+                            <a href="{{ url_for('indexing_and_abstracting', subdomain=journal.domain) }}" class="dropdown-item">Indexing And Abstracting</a>
+                            <a href="{{ url_for('peer_review_process', subdomain=journal.domain) }}" class="dropdown-item">Peer Review Process</a>
                         </div>
                     </div>
 
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">For Author</a>
                         <div class="dropdown-menu rounded-0 m-0">
-                            <a href="/subonpaper.html" class="dropdown-item">Submit Online Paper</a>
-                            <a href="/topics.html" class="dropdown-item">Topics</a>
-                            <a href="/author_gl.html" class="dropdown-item">Author Guidelines</a>
-                            <a href="/copyrightform.html" class="dropdown-item">Copyright Form</a>
-                            <a href="/checkpaperstats.html" class="dropdown-item">Check Paper Status</a>
-                            <a href="/membership.html" class="dropdown-item">Membership</a>
+                            <a href="{{ url_for('submit_online_paper', subdomain=journal.domain) }}" class="dropdown-item">Submit Online Paper</a>
+                            <a href="{{ url_for('topic', subdomain=journal.domain) }}" class="dropdown-item">Topics</a>
+                            <a href="{{ url_for('author_guidelines', subdomain=journal.domain) }}" class="dropdown-item">Author Guidelines</a>
+                            <a href="{{ url_for('copyright_form', subdomain=journal.domain) }}" class="dropdown-item">Copyright Form</a>
+                            <a href="{{ url_for('check_paper_status', subdomain=journal.domain) }}" class="dropdown-item">Check Paper Status</a>
+                            <a href="{{ url_for('membership', subdomain=journal.domain) }}" class="dropdown-item">Membership</a>
                         </div>
                     </div>
 
-                    <a href="/submanuscript.html" class="nav-item nav-link">Submit Manuscript</a>
-                    <a href="/reviewer.html" class="nav-item nav-link">Reviewer</a>
-                    <a href="/contact.html" class="nav-item nav-link">Contact</a>
+                    <a href="{{ url_for('submit_manuscript', subdomain=journal.domain) }}" class="nav-item nav-link">Submit Manuscript</a>
+                    <a href="{{ url_for('reviewer', subdomain=journal.domain) }}" class="nav-item nav-link">Reviewer</a>
+                    <a href="{{ url_for('contact_us', subdomain=journal.domain) }}" class="nav-item nav-link">Contact</a>
                 </div>
             </div>
         </nav>
@@ -174,17 +174,17 @@
                         <div class="owl-carousel tranding-carousel position-relative d-inline-flex align-items-center ml-3"
                             style="width: calc(100% - 170px); padding-right: 90px;">
                             <div class="text-truncate"><a class="text-white text-uppercase font-weight-semi-bold"
-                                    href="/about_jrnl.html">About Journal</a></div>
+                                    href="{{ url_for('about_journal', subdomain=journal.domain) }}">About Journal</a></div>
                             <div class="text-truncate"><a class="text-white text-uppercase font-weight-semi-bold"
-                                    href="/aimandscope.html">Aim and Scope</a></div>
+                                    href="{{ url_for('aim_and_scope', subdomain=journal.domain) }}">Aim and Scope</a></div>
                             <div class="text-truncate"><a class="text-white text-uppercase font-weight-semi-bold"
-                                    href="/editorial_board.html">Editorial Board</a></div>
+                                    href="{{ url_for('editorial_board', subdomain=journal.domain) }}">Editorial Board</a></div>
                             <div class="text-truncate"><a class="text-white text-uppercase font-weight-semi-bold"
-                                    href="/publication_ethics.html">Publication Ethics</a></div>
+                                    href="{{ url_for('publication_ethics', subdomain=journal.domain) }}">Publication Ethics</a></div>
                             <div class="text-truncate"><a class="text-white text-uppercase font-weight-semi-bold"
-                                    href="/indandabs.html">Indexing And Abstracting</a></div>
+                                    href="{{ url_for('indexing_and_abstracting', subdomain=journal.domain) }}">Indexing And Abstracting</a></div>
                             <div class="text-truncate"><a class="text-white text-uppercase font-weight-semi-bold"
-                                    href="/peerrevpro.html">Peer Review Process</a></div>
+                                    href="{{ url_for('peer_review_process', subdomain=journal.domain) }}">Peer Review Process</a></div>
                         </div>
                     </div>
                 </div>

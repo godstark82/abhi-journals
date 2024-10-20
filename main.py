@@ -15,8 +15,8 @@ from services.mail_service import send_email
 #! Flask app
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
-app.config['SERVER_NAME'] = 'abhijournals.com'
-# app.config['SERVER_NAME'] = 'localhost:5000'
+# app.config['SERVER_NAME'] = 'abhijournals.com'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 db = get_db()
 
@@ -73,7 +73,7 @@ def contact():
 
 
 @app.route(Routes.HOME, subdomain='<subdomain>')
-def Home(subdomain):
+def home(subdomain):
     # Attempt to find the corresponding journal for the subdomain
     journal = load_journal(subdomain)
     # Fetch the content for the home page
@@ -104,7 +104,7 @@ def Home(subdomain):
 
 
 @app.route(Routes.CURRENT_ISSUE, subdomain='<subdomain>')
-def currissue(subdomain):
+def current_issue(subdomain):
     # Find the journal that matches the subdomain
     journal = load_journal(subdomain)
     error_message = None
@@ -127,7 +127,7 @@ def currissue(subdomain):
 
 
 @app.route(Routes.BY_ISSUE, subdomain='<subdomain>')
-def byissue(subdomain):
+def by_issue(subdomain):
     # Find the journal that matches the subdomain
     journal = load_journal(subdomain)
     if not journal.volumes:
@@ -190,35 +190,35 @@ def about_journal(subdomain):
     return render_template(Paths.ABOUT_JOURNAL, content=page_service.get_page('About Journal',journal.id), journal = journal)
 
 @app.route(Routes.AIM_AND_SCOPE, subdomain='<subdomain>')
-def aimnscope(subdomain):
+def aim_and_scope(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.AIM_AND_SCOPE, content=page_service.get_page('Aim and Scope', journal.id), journal = journal)
     
 @app.route(Routes.EDITORIAL_BOARD, subdomain='<subdomain>')
-def editboard(subdomain):
+def editorial_board(subdomain):
     journal = load_journal(subdomain)
-    eb_members = editorial_service.get_all_editorial_board_members()
+    eb_members = editorial_service.get_all_editorial_board_members(journal.id)
     return render_template(Paths.EDITORIAL_BOARD, board_members=eb_members, journal = journal)
 
 @app.route(Routes.PUBLICATION_ETHICS, subdomain='<subdomain>')
-def pubethics(subdomain):
+def publication_ethics(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.PUBLICATION_ETHICS, content=page_service.get_page('Publication Ethics',journal.id), journal = journal)
 
     
 @app.route(Routes.PEER_REVIEW_PROCESS, subdomain='<subdomain>')
-def peerpro(subdomain):
+def peer_review_process(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.PEER_REVIEW_PROCESS, content=page_service.get_page('Peer Review Process',journal.id), journal = journal)
     
 
 @app.route(Routes.INDEXING_AND_ABSTRACTING, subdomain='<subdomain>')
-def indnabs(subdomain):
+def indexing_and_abstracting(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.INDEXING_AND_ABSTRACTING, journal = journal)
 
 @app.route(Routes.SUBMIT_ONLINE_PAPER, subdomain='<subdomain>')
-def subon(subdomain):
+def submit_online_paper(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.SUBMIT_ONLINE_PAPER, journal = journal)
 
@@ -228,24 +228,22 @@ def topic(subdomain):
     return render_template(Paths.TOPICS, content=page_service.get_page('Topics',journal.id), journal = journal)
 
 @app.route(Routes.AUTHOR_GUIDELINES, subdomain='<subdomain>')
-def authgl(subdomain):
+def author_guidelines(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.AUTHOR_GUIDELINES, content=page_service.get_page('Author Guidelines',journal.id), journal = journal)
 
 @app.route(Routes.COPYRIGHT_FORM, subdomain='<subdomain>')
-def crform(subdomain):
+def copyright_form(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.COPYRIGHT_FORM, journal = journal)
-@app.route(Routes.CHECK_PAPER_STATUS, subdomain='<subdomain>')
-def checkpapstat(subdomain):
-    journal = load_journal(subdomain)
-    return render_template(Paths.CHECK_PAPER_STATUS, journal = journal)
+
+
 @app.route(Routes.MEMBERSHIP, subdomain='<subdomain>')
-def mship(subdomain):
+def membership(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.MEMBERSHIP, journal = journal)
 @app.route(Routes.SUBMIT_MANUSCRIPT, subdomain='<subdomain>')
-def submitmanscr(subdomain):
+def submit_manuscript(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.SUBMIT_MANUSCRIPT, journal = journal)
 @app.route(Routes.REVIEWER, subdomain='<subdomain>')
@@ -253,8 +251,21 @@ def reviewer(subdomain):
     journal = load_journal(subdomain)
     return render_template(Paths.REVIEWER, content=page_service.get_page('Reviewer',journal.id), journal = journal)
 
+@app.route(Routes.CHECK_PAPER_STATUS, subdomain='<subdomain>', methods=['GET', 'POST'])
+def check_paper_status(subdomain, article=None):
+    article = None
+    if request.method == 'POST':
+        registration_id = request.form['registration-id']
+        article = journal_service.get_article_by_id(registration_id)
+        journal = load_journal(subdomain)
+        return render_template(Paths.CHECK_PAPER_STATUS, journal = journal, article=article)
+    
+    journal = load_journal(subdomain)
+    return render_template(Paths.CHECK_PAPER_STATUS, journal = journal, article=article)
+
+
 @app.route(Routes.CONTACT, subdomain='<subdomain>', methods=['GET', 'POST'])
-def ContactUs(subdomain):    
+def contact_us(subdomain):    
     journal = load_journal(subdomain)
     content = page_service.get_page('Contact Us',journal.id)
     
@@ -270,7 +281,7 @@ def ContactUs(subdomain):
         mail_service.send_email(name, email, phone, subject, questiontype, message)
 
         flash('Your message has been successfully submitted!', 'success')
-        return redirect(url_for('ContactUs', subdomain=subdomain))
+        return redirect(url_for('contact_us', subdomain=subdomain))
     
     return render_template(Paths.CONTACT, content=content, journal = journal, subdomain=subdomain)
 
