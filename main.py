@@ -16,7 +16,7 @@ from services.mail_service import send_email
 app = Flask(__name__)
 app.secret_key = 'journalwebx8949328001'
 # app.config['SERVER_NAME'] = 'abhijournals.com'
-app.config['SERVER_NAME'] = 'abhijournals.com'
+app.config['SERVER_NAME'] = 'localhost:5000'
 
 db = get_db()
 
@@ -25,7 +25,7 @@ db = get_db()
 all_journals = journal_service.get_all_journals()
 journal: JournalModel = None
 
-def get_journal(all_journals: List[JournalModel], subdomain: str = "main") -> Optional[JournalModel]:
+def get_journal(all_journals: List[JournalModel], subdomain: str) -> Optional[JournalModel]:
     journal = None
     for journalItem in all_journals:
         if journalItem.domain == subdomain:
@@ -46,12 +46,12 @@ def load_journal(subdomain):
 # Add a route for the root domain
 @app.route(Routes.HOME)
 def root_home():
-    journal = load_journal("main")
+    # journal = load_journal("main")
     volumes_count = journal_service.get_all_volumes_count()
     issues_count = journal_service.get_all_issues_count()
     articles_count = journal_service.get_all_articles_count()
     users_count = user_service.get_all_users_count()
-    return render_template('home/index.html', journal=journal, all_journals=all_journals, volumes_count=volumes_count, issues_count=issues_count, articles_count=articles_count, users_count=users_count)
+    return render_template('home/index.html', all_journals=all_journals, volumes_count=volumes_count, issues_count=issues_count, articles_count=articles_count, users_count=users_count)
 
 @app.route(Routes.CONTACT, methods=['GET', 'POST'])
 def contact():
@@ -294,11 +294,11 @@ def get_social_links(subdomain):
 
 
 
-mode = "prod"
+mode = "dev"
 
 if __name__ == "__main__":
     # Comment this out when freezing
     if mode == "dev":
-        app.run(host='0.0.0.0', port=5000, debug=True)
+        app.run(host='0.0.0.0', port=5000, debug=False)
     else:
         serve(app, host='0.0.0.0', port=5000, threads=4)
