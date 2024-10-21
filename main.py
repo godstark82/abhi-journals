@@ -20,6 +20,7 @@ app.config['SERVER_NAME'] = 'localhost:5000'
 
 db = get_db()
 
+
 #
 #! Fetch all journals 
 all_journals = journal_service.get_all_journals()
